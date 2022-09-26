@@ -1,10 +1,10 @@
-import { HTMLAttributes, HTMLInputTypeAttribute } from 'react';
+import { HTMLInputTypeAttribute, InputHTMLAttributes } from 'react';
 import styled from 'styled-components';
 import Text from './text';
 
-type Props = HTMLAttributes<HTMLInputElement> & {
-  type: string;
+type Props = InputHTMLAttributes<HTMLInputElement> & {
   label?: string;
+  type: HTMLInputTypeAttribute;
 };
 
 const StyledInput = styled.input`
@@ -13,7 +13,7 @@ const StyledInput = styled.input`
   border-radius: 10px;
   color: white;
   box-shadow: 2px 2px 10px white;
-  width: 3rem;
+  width: ${({ type }: Props) => type == 'number' && '3rem'};
 
   ::placeholder {
     color: var(--placeholder-color);
@@ -24,17 +24,19 @@ const StyledInput = styled.input`
     -webkit-appearance: none;
     -moz-appearance: textfield;
   }
+
+  ::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+  }
 `;
 
-const Input = ({ type, label, ...props }: Props): JSX.Element => {
+const Input = ({ label, ...props }: Props): JSX.Element => {
   return (
     <>
-      <Text
-        style={{ marginBottom: '0.2rem' }}
-        type="label"
-        text={label ? label : ''}
-      />
-      <StyledInput {...props} type={type} />
+      {label && (
+        <Text style={{ marginBottom: '0.2rem' }} type="label" text={label} />
+      )}
+      <StyledInput {...props} />
     </>
   );
 };
