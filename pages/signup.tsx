@@ -1,5 +1,3 @@
-import type { NextPage } from 'next';
-import { addListener } from 'process';
 import { useState } from 'react';
 import styled from 'styled-components';
 import Button from '../components/Button';
@@ -9,23 +7,24 @@ import { auth } from '../firebase';
 const Wrapper = styled.div`
   display: grid;
   justify-content: center;
-  row-gap: 1rem;
+  row-gap: 0.5rem;
 `;
 
-const Home: NextPage = (): JSX.Element => {
+const SignUpPage = () => {
   const [email, setEmail] = useState<string>('');
   const [pw, setPw] = useState<string>('');
 
-  const handleSignin = () => {
+  const handleSignup = () => {
     auth
-      .signInWithEmailAndPassword(email, pw)
-      .then(() => {
-        if (auth.currentUser?.emailVerified) {
-          const userId = auth.currentUser.uid;
-          console.log(userId);
-        } else {
-          const emailAdress = auth.currentUser?.email;
-          console.log('not verified', emailAdress);
+      .createUserWithEmailAndPassword(email, pw)
+      .then((userCredentials) => {
+        const user = userCredentials.user;
+        user?.sendEmailVerification();
+        {
+          user &&
+            alert(
+              `Danke! Bitte Bestätige deine Email-Adresse mit der Email, die wir dir gesendet haben an: ${user.email}`
+            );
         }
       })
       .catch((error) => alert(error.message));
@@ -33,7 +32,7 @@ const Home: NextPage = (): JSX.Element => {
 
   return (
     <Wrapper>
-      <p>login</p>
+      <p>Konto erstellen</p>
       <Input
         type="text"
         label="E-Mail-Adresse"
@@ -41,14 +40,14 @@ const Home: NextPage = (): JSX.Element => {
         onChange={(e) => setEmail(e.target.value)}
       />
       <Input
-        type="password"
+        type="passwort"
         label="Passwort"
         value={pw}
         onChange={(e) => setPw(e.target.value)}
       />
-      <Button label="Anmelden" onClick={handleSignin} />
+      <Button label="Anmelden" onClick={handleSignup} />
     </Wrapper>
   );
 };
 
-export default Home;
+export default SignUpPage;

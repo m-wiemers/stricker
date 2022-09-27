@@ -20,6 +20,8 @@ const Concerts = (): JSX.Element => {
         label="Std."
         value={startHour}
         onChange={(e) => setStartHour(+e.target.value)}
+        error={false}
+        errorMessage="nope"
       />
       <Button label="Speichern" onClick={() => console.log('hey')} />
     </>

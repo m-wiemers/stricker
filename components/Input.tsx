@@ -5,10 +5,13 @@ import Text from './text';
 type Props = InputHTMLAttributes<HTMLInputElement> & {
   label?: string;
   type: HTMLInputTypeAttribute;
+  error?: boolean;
+  errorMessage?: string;
 };
 
 const StyledInput = styled.input`
-  border: 2px solid white;
+  border: 2px solid;
+  border-color: ${({ error }: Props) => (error ? 'red' : 'white')};
   padding: 0.5rem;
   border-radius: 10px;
   color: white;
@@ -30,14 +33,24 @@ const StyledInput = styled.input`
   }
 `;
 
-const Input = ({ label, ...props }: Props): JSX.Element => {
+const Wrapper = styled.div`
+  display: gird;
+`;
+
+const Input = ({
+  label,
+  error,
+  errorMessage,
+  ...props
+}: Props): JSX.Element => {
   return (
-    <>
+    <Wrapper>
       {label && (
         <Text style={{ marginBottom: '0.2rem' }} type="label" text={label} />
       )}
-      <StyledInput {...props} />
-    </>
+      <StyledInput {...props} error={error} />
+      {error && <Text type="label" color="red" text={errorMessage} />}
+    </Wrapper>
   );
 };
 
