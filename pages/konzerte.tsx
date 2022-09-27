@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Button from '../components/Button';
 import Input from '../components/Input';
+import { auth } from '../firebase';
 
 const Concerts = (): JSX.Element => {
   const [date, setDate] = useState<string>();
@@ -23,7 +24,7 @@ const Concerts = (): JSX.Element => {
         error={false}
         errorMessage="nope"
       />
-      <Button label="Speichern" onClick={() => console.log('hey')} />
+      <Button label="logout" onClick={() => {}} />
     </>
   );
 };

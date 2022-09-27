@@ -1,4 +1,6 @@
+import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { AuthContext } from '../firebase/context';
 
 type Props = {
   menuPoints: MenuPoint[];
@@ -28,7 +30,7 @@ const MenuPoint = styled.a`
 `;
 
 const Menu = ({ menuPoints }: Props): JSX.Element => {
-  const points = menuPoints.map((el, key) => (
+  const points = menuPoints.map((el: MenuPoint, key: number) => (
     <MenuPoint key={key} href={el.href}>
       {el.linkName}
     </MenuPoint>

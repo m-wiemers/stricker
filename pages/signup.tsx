@@ -17,7 +17,7 @@ const SignUpPage = () => {
   const handleSignup = () => {
     auth
       .createUserWithEmailAndPassword(email, pw)
-      .then((userCredentials) => {
+      .then((userCredentials: any) => {
         const user = userCredentials.user;
         user?.sendEmailVerification();
         {
@@ -27,7 +27,7 @@ const SignUpPage = () => {
             );
         }
       })
-      .catch((error) => alert(error.message));
+      .catch((error: any) => alert(error.message));
   };
 
   return (
