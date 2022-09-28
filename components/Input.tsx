@@ -35,6 +35,7 @@ const StyledInput = styled.input`
 
 const Wrapper = styled.div`
   text-align: start;
+  background-color: transparent;
 `;
 
 const Input = ({

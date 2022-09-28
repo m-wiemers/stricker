@@ -22,17 +22,26 @@ if (!firebase.apps.length) {
 
 const auth = firebase.auth(app);
 
-const writeWorker = (name) => {
-  firebase.database().ref('workers/').set({ name: name });
-};
-
-const addWorker = (id, name) => {
+const writeWorker = (name, station) => {
   firebase
     .database()
     .ref('workers/' + name)
-    .set(id);
+    .set({ name: name, station: station });
 };
 
-addWorker(5342, 'Micha');
+const loadWorkers = () => {
+  const dpRef = firebase.database().ref();
+  dpRef
+    .child('workers')
+    .get()
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        return snapshot.val();
+      } else {
+        return null;
+      }
+    })
+    .catch((err) => console.error(err));
+};
 
-export { app, auth, writeWorker };
+export { app, auth, writeWorker, loadWorkers };

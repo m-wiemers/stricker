@@ -15,12 +15,14 @@ const Container = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   justify-items: center;
+  border-bottom: solid 3px white;
 `;
 
 const MenuPoint = styled.a`
   color: white;
   text-transform: uppercase;
   padding: 0.5rem;
+  font-weight: bold;
 
   :hover {
     background-color: red;

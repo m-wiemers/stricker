@@ -7,6 +7,11 @@ type Props = HTMLAttributes<HTMLDivElement> & {
   marginBottom?: string;
 };
 
+type LinkProps = HTMLAttributes<HTMLAnchorElement> & {
+  variant: 'small' | 'normal';
+  href: string;
+};
+
 const StyledLabel = styled.p`
   font-size: 0.7rem;
   color: ${({ color }: Partial<Props>) => (color ? color : 'white')};
@@ -19,6 +24,12 @@ const StyledText = styled.p`
   color: ${({ color }: Partial<Props>) => (color ? color : 'white')};
   margin-bottom: ${({ marginBottom }: Partial<Props>) =>
     marginBottom ? marginBottom : '0.2rem'};
+`;
+
+const StyledLink = styled.a<LinkProps>`
+  color: white;
+  font-size: ${({ variant }: LinkProps) =>
+    variant == 'small' ? '0.7rem' : '1rem'};
 `;
 
 const Text = ({ variant, color, children, ...props }: Props): JSX.Element => {
@@ -37,17 +48,6 @@ const Text = ({ variant, color, children, ...props }: Props): JSX.Element => {
     </>
   );
 };
-
-type LinkProps = HTMLAttributes<HTMLAnchorElement> & {
-  variant: 'small' | 'normal';
-  href: string;
-};
-
-const StyledLink = styled.a<LinkProps>`
-  color: white;
-  font-size: ${({ variant }: LinkProps) =>
-    variant == 'small' ? '0.7rem' : '1rem'};
-`;
 
 const Link = ({ variant, href, children }: LinkProps): JSX.Element => {
   return (
