@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { pseudoRandomBytes } from 'crypto';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import Button from '../components/Button';
-import Input from '../components/Input';
-import { auth } from '../firebase';
+import Button from '../../components/Button';
+import Input from '../../components/Input';
+import { auth } from '../../firebase';
 
 const Wrapper = styled.div`
   display: grid;
@@ -13,6 +14,8 @@ const Wrapper = styled.div`
 const SignUpPage = () => {
   const [email, setEmail] = useState<string>('');
   const [pw, setPw] = useState<string>('');
+  const [secondPw, setSecondPw] = useState<string>('');
+  const [firstError, setFirstError] = useState<string>('');
 
   const handleSignup = () => {
     auth
@@ -30,6 +33,15 @@ const SignUpPage = () => {
       .catch((error: any) => alert(error.message));
   };
 
+  const checkValidate = () => {
+    if (pw.length < 6) {
+      setFirstError('mindestens 6 Zeichen');
+    }
+    if (pw.length >= 6) {
+      setFirstError('');
+    }
+  };
+
   return (
     <Wrapper>
       <p>Konto erstellen</p>
@@ -44,8 +56,21 @@ const SignUpPage = () => {
         label="Passwort"
         value={pw}
         onChange={(e) => setPw(e.target.value)}
+        onBlur={checkValidate}
+        error={firstError !== ''}
+        errorMessage={firstError}
       />
-      <Button label="Anmelden" onClick={handleSignup} />
+      <Input
+        type="passwort"
+        label="Passwort wiederholen"
+        value={secondPw}
+        onChange={(e) => setSecondPw(e.target.value)}
+      />
+      <Button
+        label="Anmelden"
+        onClick={handleSignup}
+        disabled={pw !== secondPw || pw.length <= 6}
+      />
     </Wrapper>
   );
 };

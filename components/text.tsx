@@ -2,26 +2,59 @@ import { HTMLAttributes } from 'react';
 import styled from 'styled-components';
 
 type Props = HTMLAttributes<HTMLDivElement> & {
-  type: 'label' | 'normal';
-  text?: string;
+  variant: 'label' | 'normal';
   color?: string;
+  marginBottom?: string;
 };
 
 const StyledLabel = styled.p`
   font-size: 0.7rem;
   color: ${({ color }: Partial<Props>) => (color ? color : 'white')};
+  margin-bottom: ${({ marginBottom }: Partial<Props>) =>
+    marginBottom ? marginBottom : '0.2rem'};
 `;
 
-const Text = ({ type, text, color, ...props }: Props): JSX.Element => {
+const StyledText = styled.p`
+  font-size: 1rem;
+  color: ${({ color }: Partial<Props>) => (color ? color : 'white')};
+  margin-bottom: ${({ marginBottom }: Partial<Props>) =>
+    marginBottom ? marginBottom : '0.2rem'};
+`;
+
+const Text = ({ variant, color, children, ...props }: Props): JSX.Element => {
   return (
     <>
-      {type == 'label' && (
+      {variant == 'label' && (
         <StyledLabel color={color} {...props}>
-          {text}
+          {children}
         </StyledLabel>
+      )}
+      {variant !== 'label' && (
+        <StyledText color={color} {...props}>
+          {children}
+        </StyledText>
       )}
     </>
   );
 };
 
-export default Text;
+type LinkProps = HTMLAttributes<HTMLAnchorElement> & {
+  variant: 'small' | 'normal';
+  href: string;
+};
+
+const StyledLink = styled.a<LinkProps>`
+  color: white;
+  font-size: ${({ variant }: LinkProps) =>
+    variant == 'small' ? '0.7rem' : '1rem'};
+`;
+
+const Link = ({ variant, href, children }: LinkProps): JSX.Element => {
+  return (
+    <StyledLink variant={variant} href={href}>
+      {children}
+    </StyledLink>
+  );
+};
+
+export { Text, Link };

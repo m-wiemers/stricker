@@ -1,6 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { AuthContext } from '../firebase/context';
 
 type Props = {
   menuPoints: MenuPoint[];

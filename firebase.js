@@ -26,13 +26,13 @@ const writeWorker = (name) => {
   firebase.database().ref('workers/').set({ name: name });
 };
 
-const addNewWorker = (id, name) => {
-  const postData = { name: name };
-
-  const newWorkerKey = firebase.database().ref().child('workers').push().key;
-  const updates = {};
-  updates['/workers/' + newWorkerKey] = postData;
-  updates['/worker/' + id + '/' + newWorkerKey] = postData;
+const addWorker = (id, name) => {
+  firebase
+    .database()
+    .ref('workers/' + name)
+    .set(id);
 };
 
-export { app, auth, writeWorker, addNewWorker };
+addWorker(5342, 'Micha');
+
+export { app, auth, writeWorker };

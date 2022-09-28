@@ -4,6 +4,7 @@ import { useContext, useState } from 'react';
 import styled from 'styled-components';
 import Button from '../components/Button';
 import Input from '../components/Input';
+import { Link, Text } from '../components/text';
 import { auth } from '../firebase';
 import { AuthContext } from '../firebase/context';
 
@@ -11,6 +12,7 @@ const Wrapper = styled.div`
   display: grid;
   justify-content: center;
   row-gap: 1rem;
+  text-align: center;
 `;
 
 const InnerWrapper = styled.div`
@@ -45,7 +47,7 @@ const Home: NextPage = (): JSX.Element => {
     <Wrapper>
       {!user ? (
         <>
-          <p>WILLKOMMEN</p>
+          <Text variant="normal">WILLKOMMEN</Text>
           <Input
             type="text"
             label="E-Mail-Adresse"
@@ -58,17 +60,24 @@ const Home: NextPage = (): JSX.Element => {
             value={pw}
             onChange={(e) => setPw(e.target.value)}
           />
-          <Button label="Anmelden" onClick={handleSignin} />
+          <Button
+            label="Anmelden"
+            onClick={handleSignin}
+            disabled={pw.length <= 0 || email.length <= 0}
+          />
+          <Link variant="small" href="authes/forgotPassword">
+            Passwort vergessen
+          </Link>
         </>
       ) : (
         <>
           <p>Du bist angemeldet mit der E-Mail-Adresse {user.email}</p>
           <InnerWrapper>
-            <Button label="Logout" onClick={() => auth.signOut()} />
             <Button
               label="Zum Personalplan"
               onClick={() => router.push('personal')}
             />
+            <Button label="Logout" onClick={() => auth.signOut()} />
           </InnerWrapper>
         </>
       )}

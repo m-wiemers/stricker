@@ -1,6 +1,6 @@
 import { HTMLInputTypeAttribute, InputHTMLAttributes } from 'react';
 import styled from 'styled-components';
-import Text from './text';
+import { Text } from './text';
 
 type Props = InputHTMLAttributes<HTMLInputElement> & {
   label?: string;
@@ -34,7 +34,7 @@ const StyledInput = styled.input`
 `;
 
 const Wrapper = styled.div`
-  display: gird;
+  text-align: start;
 `;
 
 const Input = ({
@@ -46,10 +46,16 @@ const Input = ({
   return (
     <Wrapper>
       {label && (
-        <Text style={{ marginBottom: '0.2rem' }} type="label" text={label} />
+        <Text style={{ marginBottom: '0.2rem' }} variant="label">
+          {label}
+        </Text>
       )}
       <StyledInput {...props} error={error} />
-      {error && <Text type="label" color="red" text={errorMessage} />}
+      {error && (
+        <Text variant="label" color="red" style={{ marginTop: '0.5rem' }}>
+          {errorMessage}
+        </Text>
+      )}
     </Wrapper>
   );
 };
