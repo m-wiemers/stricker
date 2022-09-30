@@ -20,7 +20,7 @@
     "**/*.ts",
     "**/*.tsx",
     "auth.js",
-    "firebase.js",
+    "firebase.ts",
     "firebase/context.jsx"
   ],
   "exclude": ["node_modules"]

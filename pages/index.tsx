@@ -1,9 +1,15 @@
+import {
+  sendEmailVerification,
+  signInWithEmailAndPassword,
+  User,
+} from 'firebase/auth';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { useContext, useState } from 'react';
+import { MouseEventHandler, useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Button from '../components/Button';
 import Input from '../components/Input';
+import Modal from '../components/modal';
 import { Link, Text } from '../components/text';
 import { auth } from '../firebase';
 import { AuthContext } from '../firebase/context';
@@ -25,27 +31,31 @@ const Home: NextPage = (): JSX.Element => {
   const router = useRouter();
   const [email, setEmail] = useState<string>('');
   const [pw, setPw] = useState<string>('');
-
-  const { user } = useContext(AuthContext);
+  const [userIsVerified, setUserIsVerified] = useState<boolean>();
+  const [modal, setModal] = useState<boolean>(false);
+  const [modalMessage, setModalMessage] = useState<string>('');
 
   const handleSignin = () => {
-    auth
-      .signInWithEmailAndPassword(email, pw)
-      .then(() => {
-        if (auth.currentUser?.emailVerified) {
-          const userId = auth.currentUser.uid;
-          console.log(userId);
-        } else {
-          const emailAdress = auth.currentUser?.email;
-          console.log('not verified', emailAdress);
-        }
-      })
-      .catch((error: any) => alert(error.message));
+    signInWithEmailAndPassword(auth, email, pw).then((cred) => {
+      if (cred.user.emailVerified) {
+        setUserIsVerified(true);
+      }
+      if (!cred.user.emailVerified) {
+        setModalMessage(
+          'Deine Email-Adresse wurde noch nicht bestätigt. Wir senden dir die Email gleich erneut'
+        );
+        sendEmailVerification(cred.user);
+        setModal(true);
+      }
+    });
   };
 
   return (
     <Wrapper>
-      {!user ? (
+      <Modal open={modal} onClick={() => setModal(false)}>
+        {modalMessage}
+      </Modal>
+      {!userIsVerified ? (
         <>
           <Text variant="normal">WILLKOMMEN</Text>
           <Input
@@ -71,7 +81,7 @@ const Home: NextPage = (): JSX.Element => {
         </>
       ) : (
         <>
-          <p>Du bist angemeldet mit der E-Mail-Adresse {user.email}</p>
+          <p>Du bist angemeldet mit der E-Mail-Adresse {}</p>
           <InnerWrapper>
             <Button
               label="Zum Personalplan"

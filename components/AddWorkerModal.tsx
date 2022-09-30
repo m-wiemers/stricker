@@ -2,12 +2,15 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import Input from './Input';
 import Modal from './modal';
-import { writeWorker } from '../firebase';
 import Dropdown from './dropdown';
 import { Stations } from './stations';
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from '../firebase';
+import { Text } from './text';
 
 type Props = {
   open: boolean;
+  onCloseModal: () => void;
 };
 
 const Wrapper = styled.div`
@@ -25,18 +28,27 @@ const StyledAddButton = styled.button`
   border-radius: 20px;
 `;
 
-const AddWorkerModal = ({ open }: Props): JSX.Element => {
+const AddWorkerModal = ({ open, onCloseModal }: Props): JSX.Element => {
   const [newWorker, setNewWorker] = useState<string>('');
   const [station, setStation] = useState<string>('');
+  const [message, setMessage] = useState<string>('');
 
-  const handleAddWorker = () => {
-    writeWorker(newWorker, station);
+  const addNewWorker = () => {
+    const workRef = collection(db, 'workers');
+    addDoc(workRef, { name: newWorker, station: station })
+      .then(() => setMessage(`Prima! ${newWorker} wurde hinzugefügt!`))
+      .then(() => {
+        setNewWorker('');
+        setStation('Kein Einsatzort');
+      })
+      .catch((err) => console.error(err.message));
   };
 
   return (
-    <Modal open={open} onClick={() => {}} buttonLabel="Fertig">
+    <Modal open={open} onClick={onCloseModal} buttonLabel="Fertig">
       <Wrapper>
         <Input
+          style={{ width: '100%' }}
           type="text"
           label="neuer Mitarbeiter"
           value={newWorker}
@@ -48,7 +60,8 @@ const AddWorkerModal = ({ open }: Props): JSX.Element => {
           selected={station}
           onSelect={(e) => setStation(e.target.value)}
         />
-        <StyledAddButton onClick={handleAddWorker}>+</StyledAddButton>
+        <StyledAddButton onClick={addNewWorker}>+</StyledAddButton>
+        <Text variant="label">{message}</Text>
       </Wrapper>
     </Modal>
   );

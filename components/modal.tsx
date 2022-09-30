@@ -11,9 +11,11 @@ type Props = HTMLAttributes<HTMLDivElement> & {
 const Wrapper = styled.div`
   position: absolute;
   justify-self: center;
+  justify-content: center;
   display: ${({ open }: Partial<Props>) => (open ? 'block' : 'none')};
   height: max-content;
   width: max-content;
+  max-width: 450px;
   padding: 0.5rem;
   row-gap: 1rem;
   border-radius: 10px;
@@ -23,12 +25,17 @@ const Wrapper = styled.div`
 
 const InnerWrapper = styled.div`
   display: grid;
-  justify-content: center;
+  color: white;
+  text-align: center;
   padding: 1.5rem;
   min-width: 15rem;
   background-color: #555555;
   border-radius: 10px;
   margin-bottom: 0.7rem;
+`;
+
+const StyledLink = styled(Button)`
+  margin-top: 1rem;
 `;
 
 const Modal = ({
@@ -41,7 +48,11 @@ const Modal = ({
     <>
       <Wrapper open={open}>
         <InnerWrapper>{children}</InnerWrapper>
-        <Button label={buttonLabel ? buttonLabel : 'OK'} onClick={onClick} />
+        <Button
+          style={{ maxWidth: '400px', width: '100%' }}
+          label={buttonLabel ? buttonLabel : 'OK'}
+          onClick={onClick}
+        />
       </Wrapper>
     </>
   );

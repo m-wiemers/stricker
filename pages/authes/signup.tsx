@@ -1,8 +1,13 @@
-import { pseudoRandomBytes } from 'crypto';
-import { useEffect, useState } from 'react';
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from 'firebase/auth';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 import styled from 'styled-components';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
+import Modal from '../../components/modal';
 import { auth } from '../../firebase';
 
 const Wrapper = styled.div`
@@ -12,25 +17,33 @@ const Wrapper = styled.div`
 `;
 
 const SignUpPage = () => {
+  const router = useRouter();
   const [email, setEmail] = useState<string>('');
   const [pw, setPw] = useState<string>('');
   const [secondPw, setSecondPw] = useState<string>('');
   const [firstError, setFirstError] = useState<string>('');
+  const [modal, setModal] = useState<boolean>(false);
+  const [modalMessage, setModalMessage] = useState<string>('');
 
   const handleSignup = () => {
-    auth
-      .createUserWithEmailAndPassword(email, pw)
-      .then((userCredentials: any) => {
-        const user = userCredentials.user;
-        user?.sendEmailVerification();
-        {
-          user &&
-            alert(
-              `Danke! Bitte Bestätige deine Email-Adresse mit der Email, die wir dir gesendet haben an: ${user.email}`
-            );
-        }
+    createUserWithEmailAndPassword(auth, email, pw)
+      .then((cred) => {
+        sendEmailVerification(cred.user);
+        setModalMessage(
+          'Prima! Das hat geklappt! Bitte bestätige deinen Zugang in der Email, die wir die gesendet haben'
+        );
+        setModal(true);
       })
-      .catch((error: any) => alert(error.message));
+      .catch((err) => {
+        if (err.message.includes('auth/email-already-in-use'))
+          setModalMessage('Die E-Mail scheint schon in verwendung zu sein...');
+        setModal(true);
+      });
+  };
+
+  const handleModalClick = () => {
+    setModal(false);
+    router.push('/');
   };
 
   const checkValidate = () => {
@@ -44,6 +57,9 @@ const SignUpPage = () => {
 
   return (
     <Wrapper>
+      <Modal open={modal} onClick={handleModalClick}>
+        {modalMessage}
+      </Modal>
       <p>Konto erstellen</p>
       <Input
         type="text"
@@ -52,7 +68,7 @@ const SignUpPage = () => {
         onChange={(e) => setEmail(e.target.value)}
       />
       <Input
-        type="passwort"
+        type="password"
         label="Passwort"
         value={pw}
         onChange={(e) => setPw(e.target.value)}
@@ -61,7 +77,7 @@ const SignUpPage = () => {
         errorMessage={firstError}
       />
       <Input
-        type="passwort"
+        type="password"
         label="Passwort wiederholen"
         value={secondPw}
         onChange={(e) => setSecondPw(e.target.value)}
