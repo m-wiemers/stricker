@@ -7,11 +7,11 @@ import {
 } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import AddWorkerModal from '../components/AddWorkerModal';
-import Button from '../components/Button';
-import Modal from '../components/modal';
-import Worker from '../components/Worker';
-import { db } from '../firebase';
+import AddWorkerModal from '../../components/AddWorkerModal';
+import Button from '../../components/Button';
+import Modal from '../../components/modal';
+import Worker from '../../components/Worker';
+import { db } from '../../firebase';
 
 type Worker = {
   id: string;
@@ -55,7 +55,7 @@ const Personal = (): JSX.Element => {
     });
   };
 
-  const handleUpdateStation = (event: any, index: number, id: string) => {
+  const handleUpdateStation = (event: any, index: number) => {
     const newStation = event.target.value;
     const workerClone = [...workers];
     workerClone[index].station = newStation;
@@ -88,7 +88,7 @@ const Personal = (): JSX.Element => {
       id={el.id}
       name={el.name}
       station={el.station}
-      onStationChange={(event) => handleUpdateStation(event, index, el.id)}
+      onStationChange={(event) => handleUpdateStation(event, index)}
       onClick={() => handleDelete(el.id)}
     />
   ));

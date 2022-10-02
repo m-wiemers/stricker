@@ -17,6 +17,7 @@ const StyledInput = styled.input`
   color: white;
   box-shadow: 2px 2px 10px white;
   width: ${({ type }: Props) => type == 'number' && '3rem'};
+  margin-bottom: 0.5rem;
 
   ::placeholder {
     color: var(--placeholder-color);
