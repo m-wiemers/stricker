@@ -28,32 +28,31 @@ const Personal = (): JSX.Element => {
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [addModal, setAddModal] = useState<boolean>(false);
   const [modal, setModal] = useState<boolean>(false);
-  const [newWorkers, setNewWorkers] = useState<string[]>([]);
+  const [modalMessage, setModalMessage] = useState<string>('');
+  const [newWorkers, setNewWorkers] = useState<Worker[]>([]);
 
   useEffect(() => {
-    // const readData = async () => {
-    //   const workRef = await collection(db, 'workers');
-    //   await getDocs(workRef)
-    //     .then((snapshot) => {
-    //       const array: any = [];
-    //       snapshot.docs.forEach((doc) => {
-    //         array.push({ ...doc.data(), id: doc.id });
-    //       });
-    //       setWorkers(array);
-    //       return array;
-    //     })
-    //     .catch((err) => console.log(err));
-    // };
-    // readData();
-    setWorkers([
-      { name: 'Marcel', station: 'Licht', id: '12345' },
-      { name: 'Julian', station: 'CVD 1', id: '54321' },
-    ]);
+    const readData = async () => {
+      const workRef = await collection(db, 'workers');
+      await getDocs(workRef)
+        .then((snapshot) => {
+          const array: any = [];
+          snapshot.docs.forEach((doc) => {
+            array.push({ ...doc.data(), id: doc.id });
+          });
+          setWorkers(array);
+          return array;
+        })
+        .catch((err) => console.log(err));
+    };
+    readData();
   }, []);
 
   const handleDelete = (id: string) => {
     const workersRef = doc(db, 'workers', id);
-    deleteDoc(workersRef).then(() => setModal(true));
+    deleteDoc(workersRef).then(() => {
+      setModalMessage('Mitarbeiter gelöscht'), setModal(true);
+    });
   };
 
   const handleUpdateStation = (event: any, index: number, id: string) => {
@@ -62,16 +61,24 @@ const Personal = (): JSX.Element => {
     workerClone[index].station = newStation;
 
     setWorkers(workerClone);
-    if (!newWorkers.includes(workerClone[index].id)) {
-      setNewWorkers((old) => [...old, workerClone[index].id]);
+    if (!newWorkers.includes(workerClone[index])) {
+      setNewWorkers(workerClone);
     }
   };
 
   const handleUpdateFirebase = () => {
+    console.log(newWorkers);
     newWorkers.forEach((worker) => {
-      const newWorker = workers.find((el) => el.id == worker);
-      const workersRef = doc(db, 'workers', worker);
-      updateDoc(workersRef, { newWorker }).then(() => console.log('yes'));
+      const newWorker = workers.find((el) => el.id == worker.id);
+      if (newWorker) {
+        const workersRef = doc(db, 'workers', newWorker.id);
+        updateDoc(workersRef, { station: newWorker.station })
+          .then(() => {
+            setModalMessage('Updates gespeichert');
+            setModal(true);
+          })
+          .catch((err) => console.error(err.message));
+      }
     });
   };
 
@@ -89,7 +96,7 @@ const Personal = (): JSX.Element => {
   return (
     <Wrapper>
       <Modal open={modal} onClick={() => setModal(false)}>
-        Mitarbeiter gelöscht
+        {modalMessage}
       </Modal>
       <AddWorkerModal open={addModal} onCloseModal={() => setAddModal(false)} />
       {mappedWorkers}

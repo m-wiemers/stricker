@@ -29,11 +29,11 @@ function MyApp({ Component, pageProps }: AppProps) {
       {router.pathname !== '/' && !router.pathname.includes('authes/') && (
         <Menu menuPoints={menuPoints} />
       )}
-      <AuthProvider>
-        <Content>
-          <Component {...pageProps} />
-        </Content>
-      </AuthProvider>
+      {/* <AuthProvider> */}
+      <Content>
+        <Component {...pageProps} />
+      </Content>
+      {/* </AuthProvider> */}
     </>
   );
 }
