@@ -15,12 +15,24 @@ type BandVoids = {
   onChangeStartTime?: (e: any) => void;
   onChangeEndTime?: (e: any) => void;
   onChangePause?: (e: any) => void;
-  onDeleteBand: (index: number) => void;
+  onDeleteBand: (index: any) => void;
 };
 
 const Wrapper = styled.div`
   display: grid;
   justify-content: center;
+  border: 2px solid white;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 2rem;
+`;
+
+const PauseWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-items: center;
+  align-items: center;
+  height: 4.5rem;
 `;
 
 const AddBandForm = ({
@@ -59,21 +71,23 @@ const AddBandForm = ({
         value={endTime}
         onChange={onChangeEndTime}
       />
-      <Input
-        type="checkbox"
-        label="Pause danach?"
-        checked={isPause}
-        onChange={() => setIsPause(!isPause)}
-      />
-      {isPause && (
+      <PauseWrapper>
         <Input
-          type="number"
-          label="Minuten"
-          placeholder="15"
-          value={pause}
-          onChange={onChangePause}
+          type="checkbox"
+          label="Umbaupause?"
+          checked={isPause}
+          onChange={() => setIsPause(!isPause)}
         />
-      )}
+        {isPause && (
+          <Input
+            type="number"
+            label="Minuten"
+            placeholder="15"
+            value={pause}
+            onChange={onChangePause}
+          />
+        )}
+      </PauseWrapper>
       <Button label="Band löschen" onClick={onDeleteBand} />
     </Wrapper>
   );

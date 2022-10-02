@@ -1,9 +1,12 @@
+import { addDoc, collection } from 'firebase/firestore';
 import { useState } from 'react';
 import styled from 'styled-components';
 import AddBandForm, { BandProps } from '../../components/addBandForms';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
+import Modal from '../../components/modal';
 import { Text } from '../../components/text';
+import { db } from '../../firebase';
 
 type concertProps = {
   date: string;
@@ -28,6 +31,8 @@ const Wrapper = styled.div`
 const Concerts = (): JSX.Element => {
   const [date, setDate] = useState<string>('2022-10-01');
   const [bands, setBands] = useState<BandProps[]>([]);
+  const [modal, setModal] = useState<boolean>(false);
+  const [modalMessage, setModalMessage] = useState<string>('');
 
   const handleAddBand = () => {
     setBands([
@@ -51,10 +56,21 @@ const Concerts = (): JSX.Element => {
         break;
 
       case 'starttime':
-        const clone = [...bands];
-        clone[index].startTime = value;
-        setBands(clone);
+        const startTimeClone = [...bands];
+        startTimeClone[index].startTime = value;
+        setBands(startTimeClone);
         break;
+
+      case 'endtime':
+        const endTimeClone = [...bands];
+        endTimeClone[index].endTime = value;
+        setBands(endTimeClone);
+        break;
+
+      case 'pause':
+        const pauseClone = [...bands];
+        pauseClone[index].pause = +value;
+        setBands(pauseClone);
     }
   };
 
@@ -74,8 +90,27 @@ const Concerts = (): JSX.Element => {
     />
   ));
 
+  const addNewConcert = () => {
+    if (!bands.length) {
+      setModalMessage('Ein Konzert ohne eine Band? Das bringt nichts');
+      setModal(true);
+      return;
+    }
+
+    const workRef = collection(db, 'concerts');
+    addDoc(workRef, { date: date, bands: bands })
+      .then(() => {
+        setModalMessage('Konzert wurde gespeichert!');
+        setModal(true);
+      })
+      .catch((err) => console.error(err.message));
+  };
+
   return (
     <Wrapper>
+      <Modal open={modal} onClick={() => setModal(false)}>
+        {modalMessage}
+      </Modal>
       <Text variant="headline">Neues Konzert anlegen</Text>
       <Input
         type="date"
@@ -84,8 +119,12 @@ const Concerts = (): JSX.Element => {
         onChange={(e) => setDate(e.target.value)}
       />
       {BandForm}
-      <Button label="Band hinzufügen" onClick={handleAddBand} />
-      <Button label="Konzert Speichern" onClick={() => console.log(bands)} />
+      <Button
+        label="+ Band hinzufügen"
+        onClick={handleAddBand}
+        style={{ width: '50%', marginBottom: '2rem', justifySelf: 'center' }}
+      />
+      <Button label="Konzert Speichern" onClick={addNewConcert} />
     </Wrapper>
   );
 };

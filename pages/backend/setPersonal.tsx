@@ -67,7 +67,6 @@ const Personal = (): JSX.Element => {
   };
 
   const handleUpdateFirebase = () => {
-    console.log(newWorkers);
     newWorkers.forEach((worker) => {
       const newWorker = workers.find((el) => el.id == worker.id);
       if (newWorker) {
