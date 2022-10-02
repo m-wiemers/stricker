@@ -1,3 +1,4 @@
+import { sendPasswordResetEmail } from 'firebase/auth';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import styled from 'styled-components';
@@ -22,8 +23,7 @@ const ForgotPassword = (): JSX.Element => {
   const modalMessage = `Wir haben dir eine E-Mail an ${email} gesendet`;
 
   const handlePasswortReset = () => {
-    auth
-      .sendPasswordResetEmail(email)
+    sendPasswordResetEmail(auth, email)
       .then(() => setOpenModal(true))
       .catch((err) => console.log(err.message));
 
