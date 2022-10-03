@@ -8,21 +8,6 @@ import Modal from '../../components/modal';
 import { Text } from '../../components/text';
 import { db } from '../../firebase';
 
-type concertProps = {
-  date: string;
-  bands: [
-    {
-      name: string;
-      startTime: string;
-      endTime: string;
-      pause?: {
-        isPause: boolean;
-        minutes: number;
-      };
-    }
-  ];
-};
-
 const Wrapper = styled.div`
   display: grid;
   justify-content: center;
