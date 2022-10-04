@@ -88,7 +88,7 @@ const AddBandForm = ({
           />
         )}
       </PauseWrapper>
-      <Button label="Band löschen" onClick={onDeleteBand} />
+      <Button label="Band löschen" color="red" onClick={onDeleteBand} />
     </Wrapper>
   );
 };

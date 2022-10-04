@@ -15,6 +15,7 @@ const Wrapper = styled.div`
 
 const Concerts = (): JSX.Element => {
   const [date, setDate] = useState<string>('2022-10-01');
+  const [concertName, setConcertName] = useState<string>('');
   const [bands, setBands] = useState<BandProps[]>([]);
   const [modal, setModal] = useState<boolean>(false);
   const [modalMessage, setModalMessage] = useState<string>('');
@@ -83,7 +84,7 @@ const Concerts = (): JSX.Element => {
     }
 
     const workRef = collection(db, 'concerts');
-    addDoc(workRef, { date: date, bands: bands })
+    addDoc(workRef, { date: date, concertName: concertName, bands: bands })
       .then(() => {
         setModalMessage('Konzert wurde gespeichert!');
         setModal(true);
@@ -102,6 +103,12 @@ const Concerts = (): JSX.Element => {
         label="Datum"
         value={date}
         onChange={(e) => setDate(e.target.value)}
+      />
+      <Input
+        type="text"
+        label="Konzertname"
+        value={concertName}
+        onChange={(e) => setConcertName(e.target.value)}
       />
       {BandForm}
       <Button

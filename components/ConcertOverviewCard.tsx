@@ -1,10 +1,10 @@
-import { start } from 'repl';
 import styled from 'styled-components';
 import { formatDate } from '../helper/formatter';
 import { Text } from './text';
 
 type Props = {
   date: string;
+  concertName: string;
   startTime: string;
   endTime: string;
   bands: string[];
@@ -36,6 +36,7 @@ const Line = styled.div`
 
 const ConcertOverviewCard = ({
   date,
+  concertName,
   startTime,
   endTime,
   bands,
@@ -53,6 +54,9 @@ const ConcertOverviewCard = ({
     <Wrapper href={href}>
       <Text variant="normal" style={{ gridColumn: '1/3' }}>
         Datum: {formateDate}
+      </Text>
+      <Text variant="normal" style={{ gridColumn: '1/3' }}>
+        {concertName}
       </Text>
       <Line />
       <Text variant="label">Start: {startTime}</Text>

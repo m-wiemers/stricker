@@ -8,6 +8,7 @@ import { db } from '../../firebase';
 export type ConcertProps = {
   id: string;
   date: string;
+  concertName: string;
   bands: BandProps[];
 };
 
@@ -20,6 +21,7 @@ type BandProps = {
 
 const Wrapper = styled.div`
   display: grid;
+  justify-content: center;
   gap: 1rem;
 `;
 
@@ -47,6 +49,7 @@ const Concerts = (): JSX.Element => {
     <ConcertOverviewCard
       key={concert.id}
       date={concert.date}
+      concertName={concert.concertName}
       startTime={concert.bands[0].startTime}
       endTime={concert.bands[concert.bands.length - 1].endTime}
       bands={concert.bands.map((band) => band.bandName)}
@@ -56,9 +59,7 @@ const Concerts = (): JSX.Element => {
 
   return (
     <Wrapper>
-      <Text variant="headline" style={{ gridColumn: '1/3' }}>
-        Konzertübersicht
-      </Text>
+      <Text variant="headline">Konzertübersicht</Text>
       {overview}
     </Wrapper>
   );

@@ -102,6 +102,7 @@ const Personal = (): JSX.Element => {
       <Button
         label="Neuen Mitarbeiter hinzufügen"
         onClick={() => setAddModal(true)}
+        style={{ marginBottom: '1rem' }}
       />
       <Button label="Updates speichern" onClick={handleUpdateFirebase} />
     </Wrapper>
