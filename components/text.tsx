@@ -29,6 +29,7 @@ const StyledText = styled.p`
 
 const StyledHeadline = styled.h1`
   font-size: 2rem;
+  background-color: transparent;
   color: ${({ color }: Partial<Props>) => (color ? color : 'white')};
   margin-bottom: ${({ marginBottom }: Partial<Props>) =>
     marginBottom ? marginBottom : '0.2rem'};
