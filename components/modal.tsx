@@ -9,7 +9,7 @@ type Props = HTMLAttributes<HTMLDivElement> & {
 };
 
 const Wrapper = styled.div`
-  position: absolute;
+  position: fixed;
   justify-self: center;
   justify-content: center;
   display: ${({ open }: Partial<Props>) => (open ? 'block' : 'none')};

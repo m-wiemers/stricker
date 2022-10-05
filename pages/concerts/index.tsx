@@ -1,9 +1,27 @@
 import { collection, getDocs } from 'firebase/firestore';
-import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ConcertOverviewCard from '../../components/ConcertOverviewCard';
 import { Text } from '../../components/text';
 import { db } from '../../firebase';
+
+export async function getStaticProps() {
+  const concertRef = await collection(db, 'concerts');
+  const concertList = await getDocs(concertRef)
+    .then((snapshot) => {
+      const array: any = [];
+      snapshot.docs.forEach((doc) => {
+        array.push({ ...doc.data(), id: doc.id });
+      });
+      return array;
+    })
+    .catch((err) => console.log(err));
+
+  return {
+    props: {
+      concertList,
+    },
+  };
+}
 
 export type ConcertProps = {
   id: string;
@@ -25,25 +43,8 @@ const Wrapper = styled.div`
   gap: 1rem;
 `;
 
-const Concerts = (): JSX.Element => {
-  const [concerts, setConcerts] = useState<ConcertProps[]>();
-
-  useEffect(() => {
-    const readData = async () => {
-      const workRef = await collection(db, 'concerts');
-      await getDocs(workRef)
-        .then((snapshot) => {
-          const array: any = [];
-          snapshot.docs.forEach((doc) => {
-            array.push({ ...doc.data(), id: doc.id });
-          });
-          setConcerts(array);
-          return array;
-        })
-        .catch((err) => console.log(err));
-    };
-    readData();
-  }, []);
+const Concerts = ({ concertList }: any): JSX.Element => {
+  const concerts: ConcertProps[] = concertList;
 
   const overview = concerts?.map((concert) => (
     <ConcertOverviewCard

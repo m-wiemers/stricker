@@ -44,7 +44,12 @@ const ConcertPage = (): JSX.Element => {
         .then((concert) => {
           const data = concert.data();
           if (data) {
-            setConcert({ id: data.id, date: data.date, bands: data.bands });
+            setConcert({
+              id: data.id,
+              date: data.date,
+              bands: data.bands,
+              concertName: data.concertName,
+            });
           }
         })
         .catch((err) => console.error(err.message));

@@ -1,6 +1,5 @@
 import { HTMLAttributes } from 'react';
 import styled from 'styled-components';
-import UpdateUser from './icons/UpdateUser';
 
 type Props = HTMLAttributes<HTMLDivElement> & {
   type: 'plus' | 'minus';

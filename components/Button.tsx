@@ -20,13 +20,13 @@ const StyledButton = styled.button`
   border-radius: 10px;
   font-weight: bold;
   color: white;
-  cursor: pointer;
+  cursor: ${({ disabled }: ButtonProps) =>
+    disabled ? 'not-allowed' : 'pointer'};
 
   :hover {
     border-color: ${({ disabled }: ButtonProps) =>
       disabled ? 'inherit' : 'grey'};
-    cursor: ${({ disabled }: ButtonProps) =>
-      disabled ? 'not-allowed' : 'pointer'};
+    box-shadow: 2px 2px 4px white;
   }
 `;
 

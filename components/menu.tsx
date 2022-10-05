@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Link from 'next/link';
 
 type Props = {
   menuPoints: MenuPoint[];
@@ -23,17 +24,18 @@ const MenuPoint = styled.a`
   text-transform: uppercase;
   padding: 0.5rem;
   font-weight: bold;
+  cursor: pointer;
 
   :hover {
-    background-color: red;
+    background-color: blue;
   }
 `;
 
 const Menu = ({ menuPoints }: Props): JSX.Element => {
   const points = menuPoints.map((el: MenuPoint, key: number) => (
-    <MenuPoint key={key} href={el.href}>
-      {el.linkName}
-    </MenuPoint>
+    <Link key={key} href={el.href}>
+      <MenuPoint>{el.linkName}</MenuPoint>
+    </Link>
   ));
 
   return <Container>{points}</Container>;

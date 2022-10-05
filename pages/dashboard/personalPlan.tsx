@@ -20,12 +20,14 @@ type Worker = {
 const Wrapper = styled.div`
   display: grid;
   justify-content: center;
+  grid-template-columns: 1fr;
   row-gap: 0.5rem;
+  max-width: 600px;
 `;
 
 const StationWrapper = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
   border-bottom: 1px solid white;
 `;
 
@@ -33,13 +35,14 @@ const Station = styled.p`
   width: 100%;
   font-weight: bold;
   color: blue;
+  grid-column: 1/3;
 `;
 
 type PersonPlan = {
   name: string;
-  station?: string;
-  startTime?: string;
-  endTime?: string;
+  station: string;
+  startTime: string;
+  endTime: string;
 };
 
 export async function getStaticProps() {
@@ -86,54 +89,60 @@ const PersonalPlan = ({ workers, concertList }: any): JSX.Element => {
   });
 
   useEffect(() => {
-    console.log(personal);
-  }, [personal]);
+    setSelectedConcert(concertDateList[0]);
+    const newList: PersonPlan[] = [];
+    Stations.forEach((station) => {
+      const name = personalList.find(
+        (person) => person.station === station
+      )?.name;
+      if (name) {
+        const newObject = {
+          name: name,
+          station: station,
+          startTime: '18:00',
+          endTime: 'Ende',
+        };
+        newList.push(newObject);
+      } else {
+        const newObject = {
+          name: 'Keine Angabe',
+          station: station,
+          startTime: '18:00',
+          endTime: 'Ende',
+        };
+        newList.push(newObject);
+      }
+      setPersonal(newList);
+    });
+  }, []);
 
   useEffect(() => {
-    setSelectedConcert(concertDateList[0]);
-  }, []);
+    console.log('Personal', personal);
+  }, [personal]);
 
   const handleChangeWorker = (value: string, station: string) => {
     const personalClone = [...personal];
     let person = personalClone.find((per) => per.station === station);
     if (person) {
       person.name = value;
-    } else {
-      const newPerson = { name: value, station: station };
-      personalClone.push(newPerson);
     }
     setPersonal(personalClone);
   };
 
   const handleChangeStartTime = (value: string, station: string) => {
     const startTimeClone = [...personal];
-    let startTime = startTimeClone.find((obj) => obj.station === station);
-    if (startTime) {
-      startTime.startTime = value;
+    let person = startTimeClone.find((obj) => obj.station === station);
+    if (person) {
+      person.startTime = value;
     }
-    // if (!startTime) {
-    //   const newStartTime = {
-    //     name: 'Keine Angabe',
-    //     startTime: value,
-    //     station: station,
-    //   };
-    //   startTimeClone.push(newStartTime);
-    // }
     setPersonal(startTimeClone);
   };
 
   const handleChangeEndTime = (value: string, station: string) => {
     const clone = [...personal];
-    let endTime = clone.find((obj) => obj.station === station);
-    if (endTime) {
-      endTime.endTime = value;
-    } else {
-      const newEndTime = {
-        name: 'Keine Angabe',
-        endTime: value,
-        station: station,
-      };
-      clone.push(newEndTime);
+    let person = clone.find((obj) => obj.station === station);
+    if (person) {
+      person.endTime = value;
     }
     setPersonal(clone);
   };
@@ -146,35 +155,45 @@ const PersonalPlan = ({ workers, concertList }: any): JSX.Element => {
     return (
       <StationWrapper key={index}>
         <Station>{station}</Station>
-        <Dropdown
-          list={personalList.map((per) => per.name)}
-          selected={
-            personal.find((person) => person.station == station)?.name ||
-            personalList.find((person) => person.station == station)?.name ||
-            'Keine Angabe'
-          }
-          onSelect={(e) => handleChangeWorker(e.target.value, station)}
-        />
-        <Dropdown
-          label="von"
-          list={WorkTimes}
-          selected={
-            personal.find((person) => person.station == station)?.startTime ||
-            '18:00'
-          }
-          onSelect={(e) => handleChangeStartTime(e.target.value, station)}
-          width="5rem"
-        />
-        <Dropdown
-          label="bis"
-          list={WorkTimes}
-          selected={
-            personal.find((person) => person.station == station)?.endTime ||
-            'Ende'
-          }
-          onSelect={(e) => handleChangeEndTime(e.target.value, station)}
-          width="5rem"
-        />
+        <div style={{ gridColumn: '3/5' }}>
+          <Dropdown
+            label="Mitarbeiter"
+            list={personalList.map((per) => per.name)}
+            selected={
+              personal.find((person) => person.station == station)?.name ||
+              'Keine Angabe'
+            }
+            onSelect={(e) => handleChangeWorker(e.target.value, station)}
+          />
+        </div>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gridColumn: '3/5',
+          }}
+        >
+          <Dropdown
+            label="von"
+            list={WorkTimes}
+            selected={
+              personal.find((person) => person.station == station)?.startTime ||
+              '18:00'
+            }
+            onSelect={(e) => handleChangeStartTime(e.target.value, station)}
+            width="5rem"
+          />
+          <Dropdown
+            label="bis"
+            list={WorkTimes}
+            selected={
+              personal.find((person) => person.station == station)?.endTime ||
+              'Ende'
+            }
+            onSelect={(e) => handleChangeEndTime(e.target.value, station)}
+            width="5rem"
+          />
+        </div>
       </StationWrapper>
     );
   });
@@ -202,7 +221,7 @@ const PersonalPlan = ({ workers, concertList }: any): JSX.Element => {
     <Wrapper>
       <Text variant="headline">Personal Plan erstellen</Text>
       <Dropdown
-        label="Datum des Konzertes"
+        label="Konzert auswählen"
         list={concertDateList}
         selected={selectedConcert}
         onSelect={(e) => setSelectedConcert(e.target.value)}

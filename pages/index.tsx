@@ -1,18 +1,16 @@
 import {
   sendEmailVerification,
   signInWithEmailAndPassword,
-  User,
 } from 'firebase/auth';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { MouseEventHandler, useContext, useEffect, useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import Button from '../components/Button';
 import Input from '../components/Input';
 import Modal from '../components/modal';
-import { Link, Text } from '../components/text';
+import { CustomLink, Text } from '../components/text';
 import { auth } from '../firebase';
-import { AuthContext } from '../firebase/context';
 
 const Wrapper = styled.div`
   display: grid;
@@ -57,7 +55,7 @@ const Home: NextPage = (): JSX.Element => {
       </Modal>
       {!userIsVerified ? (
         <>
-          <Text variant="normal">WILLKOMMEN</Text>
+          <Text variant="headline">WILLKOMMEN</Text>
           <Input
             type="text"
             label="E-Mail-Adresse"
@@ -75,9 +73,9 @@ const Home: NextPage = (): JSX.Element => {
             onClick={handleSignin}
             disabled={pw.length <= 0 || email.length <= 0}
           />
-          <Link variant="small" href="authes/forgotPassword">
+          <CustomLink variant="small" href="authes/forgotPassword">
             Passwort vergessen
-          </Link>
+          </CustomLink>
         </>
       ) : (
         <>

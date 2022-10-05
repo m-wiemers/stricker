@@ -1,5 +1,6 @@
 import { HTMLAttributes } from 'react';
 import styled from 'styled-components';
+import Link from 'next/link';
 
 type Props = HTMLAttributes<HTMLDivElement> & {
   variant: 'label' | 'normal' | 'headline';
@@ -33,9 +34,9 @@ const StyledHeadline = styled.h1`
     marginBottom ? marginBottom : '0.2rem'};
 `;
 
-const StyledLink = styled.a<LinkProps>`
+const StyledLink = styled.a<Partial<LinkProps>>`
   color: white;
-  font-size: ${({ variant }: LinkProps) =>
+  font-size: ${({ variant }: Partial<LinkProps>) =>
     variant == 'small' ? '0.7rem' : '1rem'};
 `;
 
@@ -61,12 +62,12 @@ const Text = ({ variant, color, children, ...props }: Props): JSX.Element => {
   );
 };
 
-const Link = ({ variant, href, children }: LinkProps): JSX.Element => {
+const CustomLink = ({ variant, href, children }: LinkProps): JSX.Element => {
   return (
-    <StyledLink variant={variant} href={href}>
-      {children}
-    </StyledLink>
+    <Link href={href}>
+      <StyledLink variant={variant}>{children}</StyledLink>
+    </Link>
   );
 };
 
-export { Text, Link };
+export { Text, CustomLink };
