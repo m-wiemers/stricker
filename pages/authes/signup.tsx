@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Modal from '../../components/modal';
+import { Text } from '../../components/text';
 import { auth } from '../../firebase';
 
 const Wrapper = styled.div`
@@ -60,7 +61,7 @@ const SignUpPage = () => {
       <Modal open={modal} onClick={handleModalClick}>
         {modalMessage}
       </Modal>
-      <p>Konto erstellen</p>
+      <Text variant="headline">Konto erstellen</Text>
       <Input
         type="text"
         label="E-Mail-Adresse"

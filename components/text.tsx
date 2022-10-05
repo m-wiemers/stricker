@@ -10,6 +10,7 @@ type Props = HTMLAttributes<HTMLDivElement> & {
 
 type LinkProps = HTMLAttributes<HTMLAnchorElement> & {
   variant: 'small' | 'normal';
+  color?: string;
   href: string;
 };
 
@@ -36,7 +37,8 @@ const StyledHeadline = styled.h1`
 `;
 
 const StyledLink = styled.a<Partial<LinkProps>>`
-  color: white;
+  color: ${({ color }: Partial<LinkProps>) => (color ? color : 'white')};
+  cursor: pointer;
   font-size: ${({ variant }: Partial<LinkProps>) =>
     variant == 'small' ? '0.7rem' : '1rem'};
 `;
@@ -63,10 +65,17 @@ const Text = ({ variant, color, children, ...props }: Props): JSX.Element => {
   );
 };
 
-const CustomLink = ({ variant, href, children }: LinkProps): JSX.Element => {
+const CustomLink = ({
+  variant,
+  href,
+  color,
+  children,
+}: LinkProps): JSX.Element => {
   return (
     <Link href={href}>
-      <StyledLink variant={variant}>{children}</StyledLink>
+      <StyledLink color={color} variant={variant}>
+        {children}
+      </StyledLink>
     </Link>
   );
 };

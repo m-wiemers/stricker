@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Modal from '../../components/modal';
-import { Link, Text } from '../../components/text';
+import { CustomLink, Text } from '../../components/text';
 import { auth } from '../../firebase';
 
 const Wrapper = styled.div`
@@ -49,9 +49,9 @@ const ForgotPassword = (): JSX.Element => {
         disabled={email.length <= 0}
         onClick={handlePasswortReset}
       />
-      <Link variant="small" href={'/'}>
+      <CustomLink variant="small" href={'/'}>
         zurück zur Anmeldung
-      </Link>
+      </CustomLink>
     </Wrapper>
   );
 };

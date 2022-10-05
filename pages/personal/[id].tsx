@@ -25,7 +25,6 @@ const PersonCard = styled.div`
 const PersonalPlanPage = (): JSX.Element => {
   const router = useRouter();
   const thisId = router.asPath.split('/').pop();
-  console.log(thisId);
 
   const [personalPlan, setPersonalPlan] = useState<PersonalPlanProps>();
 

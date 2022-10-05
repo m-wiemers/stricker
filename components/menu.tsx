@@ -14,9 +14,12 @@ const Container = styled.div`
   width: 100%;
   padding: 1rem;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
   justify-items: center;
   border-bottom: solid 3px white;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(6, 1fr);
+  }
 `;
 
 const MenuPoint = styled.a`
@@ -28,6 +31,7 @@ const MenuPoint = styled.a`
 
   :hover {
     background-color: blue;
+    border-radius: 10px;
   }
 `;
 

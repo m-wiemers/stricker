@@ -116,10 +116,6 @@ const PersonalPlan = ({ workers, concertList }: any): JSX.Element => {
     });
   }, []);
 
-  useEffect(() => {
-    console.log('Personal', personal);
-  }, [personal]);
-
   const handleChangeWorker = (value: string, station: string) => {
     const personalClone = [...personal];
     let person = personalClone.find((per) => per.station === station);

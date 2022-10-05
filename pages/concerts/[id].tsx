@@ -61,10 +61,10 @@ const ConcertPage = (): JSX.Element => {
 
   const formattedDate = concert && formatDate(concert?.date);
 
-  const bandSection = concert?.bands.map((band) => {
+  const bandSection = concert?.bands.map((band, index) => {
     return (
       <>
-        <BandWrapper key={band.bandName}>
+        <BandWrapper key={index}>
           <Text variant="normal" style={{ gridColumn: '1/3' }}>
             {band.bandName}
           </Text>
