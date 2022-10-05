@@ -34,6 +34,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {router.pathname !== '/' &&
+        router.pathname !== '/signedoutpage' &&
         !router.pathname.includes('authes') &&
         !router.pathname.includes('dashboard') && (
           <Menu menuPoints={menuPoints} />
@@ -41,11 +42,11 @@ function MyApp({ Component, pageProps }: AppProps) {
       {router.pathname.includes('dashboard') && (
         <Menu menuPoints={dashboardMenu} />
       )}
-      {/* <AuthProvider> */}
-      <Content>
-        <Component {...pageProps} />
-      </Content>
-      {/* </AuthProvider> */}
+      <AuthProvider>
+        <Content>
+          <Component {...pageProps} />
+        </Content>
+      </AuthProvider>
     </>
   );
 }

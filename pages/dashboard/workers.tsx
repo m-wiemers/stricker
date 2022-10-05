@@ -5,13 +5,15 @@ import {
   getDocs,
   updateDoc,
 } from 'firebase/firestore';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import AddWorkerModal from '../../components/AddWorkerModal';
 import Button from '../../components/Button';
 import Modal from '../../components/modal';
+import { Text } from '../../components/text';
 import Worker from '../../components/Worker';
 import { db } from '../../firebase';
+import { AuthContext } from '../../firebase/context';
 
 type Worker = {
   id: string;
@@ -30,6 +32,7 @@ const Personal = (): JSX.Element => {
   const [modal, setModal] = useState<boolean>(false);
   const [modalMessage, setModalMessage] = useState<string>('');
   const [newWorkers, setNewWorkers] = useState<Worker[]>([]);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     const readData = async () => {
@@ -94,17 +97,26 @@ const Personal = (): JSX.Element => {
 
   return (
     <Wrapper>
-      <Modal open={modal} onClick={() => setModal(false)}>
-        {modalMessage}
-      </Modal>
-      <AddWorkerModal open={addModal} onCloseModal={() => setAddModal(false)} />
-      {mappedWorkers}
-      <Button
-        label="Neuen Mitarbeiter hinzufügen"
-        onClick={() => setAddModal(true)}
-        style={{ marginBottom: '1rem' }}
-      />
-      <Button label="Updates speichern" onClick={handleUpdateFirebase} />
+      {user ? (
+        <>
+          <Modal open={modal} onClick={() => setModal(false)}>
+            {modalMessage}
+          </Modal>
+          <AddWorkerModal
+            open={addModal}
+            onCloseModal={() => setAddModal(false)}
+          />
+          {mappedWorkers}
+          <Button
+            label="Neuen Mitarbeiter hinzufügen"
+            onClick={() => setAddModal(true)}
+            style={{ marginBottom: '1rem' }}
+          />
+          <Button label="Updates speichern" onClick={handleUpdateFirebase} />
+        </>
+      ) : (
+        <Text variant="normal">Du bist nicht angemeldet</Text>
+      )}
     </Wrapper>
   );
 };

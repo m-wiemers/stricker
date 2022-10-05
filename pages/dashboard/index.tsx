@@ -1,6 +1,8 @@
+import { useContext } from 'react';
 import styled from 'styled-components';
 import Menu from '../../components/menu';
 import { CustomLink, Text } from '../../components/text';
+import { AuthContext } from '../../firebase/context';
 
 const Wrapper = styled.div`
   display: grid;
@@ -18,33 +20,40 @@ const TextWrapper = styled.div`
 `;
 
 const Dashboard = (): JSX.Element => {
+  const { user } = useContext(AuthContext);
+
   return (
     <>
-      <Wrapper>
-        <Text variant="headline">Willkommen im Dashboard</Text>
-        <TextWrapper>
-          <Text variant="normal">
-            Kleine Erklärung: Unter --Konzerte-- lassen sich Konzerte anlegen.
-            Die Links können dann an die entsprechende Band gereicht werden.
-          </Text>
-          <Text variant="normal">
-            Unter --Mitarbeiter-- lassen sich Mitarbeiter anlegen inkl. ihren
-            Standard-Bereich anlegen.
-          </Text>
-          <Text variant="normal">
-            Unter --Personalplanung-- kannst du angelegte Mitarbeiter für die
-            angelegten Konzerte planen. Es lässt sich noch einstellen, dass auch
-            nur registrierte Mitarbeiter die Personalplanung sehen können.
-          </Text>
-          <CustomLink color="blue" href="/personal" variant="normal">
-            Die Ergebnisse lassen sich dann auch hier sehen.
-          </CustomLink>
-          <Text variant="normal">
-            Das sieht hier alles noch nicht so toll aus, aber das lässt sich
-            nach und nach ändern
-          </Text>
-        </TextWrapper>
-      </Wrapper>
+      {user ? (
+        <Wrapper>
+          <Text variant="headline">Willkommen im Dashboard</Text>
+          <TextWrapper>
+            <Text variant="normal">
+              Kleine Erklärung: Unter --Konzerte-- lassen sich Konzerte anlegen.
+              Die Links können dann an die entsprechende Band gereicht werden.
+            </Text>
+            <Text variant="normal">
+              Unter --Mitarbeiter-- lassen sich Mitarbeiter anlegen inkl. ihren
+              Standard-Bereich anlegen.
+            </Text>
+            <Text variant="normal">
+              Unter --Personalplanung-- kannst du angelegte Mitarbeiter für die
+              angelegten Konzerte planen. Es lässt sich noch einstellen, dass
+              auch nur registrierte Mitarbeiter die Personalplanung sehen
+              können.
+            </Text>
+            <CustomLink color="blue" href="/personal" variant="normal">
+              Die Ergebnisse lassen sich dann auch hier sehen.
+            </CustomLink>
+            <Text variant="normal">
+              Das sieht hier alles noch nicht so toll aus, aber das lässt sich
+              nach und nach ändern
+            </Text>
+          </TextWrapper>
+        </Wrapper>
+      ) : (
+        <Text variant="normal">Du bist nicht angemeldet</Text>
+      )}
     </>
   );
 };

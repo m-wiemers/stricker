@@ -1,5 +1,5 @@
 import { addDoc, collection } from 'firebase/firestore';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import styled from 'styled-components';
 import AddBandForm, { BandProps } from '../../components/addBandForms';
 import Button from '../../components/Button';
@@ -7,6 +7,7 @@ import Input from '../../components/Input';
 import Modal from '../../components/modal';
 import { Text } from '../../components/text';
 import { db } from '../../firebase';
+import { AuthContext } from '../../firebase/context';
 
 const Wrapper = styled.div`
   display: grid;
@@ -19,6 +20,7 @@ const Concerts = (): JSX.Element => {
   const [bands, setBands] = useState<BandProps[]>([]);
   const [modal, setModal] = useState<boolean>(false);
   const [modalMessage, setModalMessage] = useState<string>('');
+  const { user } = useContext(AuthContext);
 
   const handleAddBand = () => {
     setBands([
@@ -94,29 +96,39 @@ const Concerts = (): JSX.Element => {
 
   return (
     <Wrapper>
-      <Modal open={modal} onClick={() => setModal(false)}>
-        {modalMessage}
-      </Modal>
-      <Text variant="headline">Neues Konzert anlegen</Text>
-      <Input
-        type="date"
-        label="Datum"
-        value={date}
-        onChange={(e) => setDate(e.target.value)}
-      />
-      <Input
-        type="text"
-        label="Konzertname"
-        value={concertName}
-        onChange={(e) => setConcertName(e.target.value)}
-      />
-      {BandForm}
-      <Button
-        label="+ Band hinzufügen"
-        onClick={handleAddBand}
-        style={{ width: '50%', marginBottom: '2rem', justifySelf: 'center' }}
-      />
-      <Button label="Konzert Speichern" onClick={addNewConcert} />
+      {user ? (
+        <>
+          <Modal open={modal} onClick={() => setModal(false)}>
+            {modalMessage}
+          </Modal>
+          <Text variant="headline">Neues Konzert anlegen</Text>
+          <Input
+            type="date"
+            label="Datum"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
+          <Input
+            type="text"
+            label="Konzertname"
+            value={concertName}
+            onChange={(e) => setConcertName(e.target.value)}
+          />
+          {BandForm}
+          <Button
+            label="+ Band hinzufügen"
+            onClick={handleAddBand}
+            style={{
+              width: '50%',
+              marginBottom: '2rem',
+              justifySelf: 'center',
+            }}
+          />
+          <Button label="Konzert Speichern" onClick={addNewConcert} />
+        </>
+      ) : (
+        <Text variant="normal">Du bist nicht angemeldet</Text>
+      )}
     </Wrapper>
   );
 };

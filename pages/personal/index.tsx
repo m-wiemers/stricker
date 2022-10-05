@@ -1,8 +1,10 @@
 import { collection, getDocs } from 'firebase/firestore';
+import { useContext } from 'react';
 import styled from 'styled-components';
 import PersonalOverviewCard from '../../components/PersonalOverviewCard';
 import { Text } from '../../components/text';
 import { db } from '../../firebase';
+import { AuthContext } from '../../firebase/context';
 
 export async function getStaticProps() {
   const personalRef = await collection(db, 'personalPlan');
@@ -38,6 +40,7 @@ const Wrapper = styled.div`
 `;
 
 const Personal = ({ personal }: any): JSX.Element => {
+  const user = useContext(AuthContext);
   const concerts: PersonalPlanProps[] = personal;
 
   const mappedConcerts = concerts.map((concert) => {
@@ -51,10 +54,16 @@ const Personal = ({ personal }: any): JSX.Element => {
   });
 
   return (
-    <Wrapper>
-      <Text variant="headline">Personalplanung</Text>
-      {mappedConcerts}
-    </Wrapper>
+    <>
+      {user.user ? (
+        <Wrapper>
+          <Text variant="headline">Personalplanung</Text>
+          {mappedConcerts}
+        </Wrapper>
+      ) : (
+        <Text variant="normal">Du bist nicht angemeldet</Text>
+      )}
+    </>
   );
 };
 
