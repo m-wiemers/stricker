@@ -8,11 +8,12 @@ type Props = HTMLAttributes<HTMLButtonElement> &
 
 type ButtonProps = HTMLAttributes<HTMLButtonElement> & {
   disabled?: boolean;
+  color?: string;
 };
 
 const StyledButton = styled.button`
-  background-color: ${({ disabled }: ButtonProps) =>
-    disabled ? 'grey' : 'green'};
+  background-color: ${({ disabled, color }: ButtonProps) =>
+    disabled ? 'grey' : color ? color : 'green'};
   padding: 0.5rem;
   border: 2px solid white;
   box-shadow: 2px 2px 10px white;
@@ -29,9 +30,9 @@ const StyledButton = styled.button`
   }
 `;
 
-const Button = ({ label, disabled, ...props }: Props): JSX.Element => {
+const Button = ({ label, disabled, color, ...props }: Props): JSX.Element => {
   return (
-    <StyledButton disabled={disabled} {...props}>
+    <StyledButton disabled={disabled} color={color} {...props}>
       {label}
     </StyledButton>
   );

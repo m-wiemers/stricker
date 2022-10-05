@@ -2,7 +2,7 @@ import { HTMLAttributes } from 'react';
 import styled from 'styled-components';
 
 type Props = HTMLAttributes<HTMLDivElement> & {
-  variant: 'label' | 'normal';
+  variant: 'label' | 'normal' | 'headline';
   color?: string;
   marginBottom?: string;
 };
@@ -26,6 +26,13 @@ const StyledText = styled.p`
     marginBottom ? marginBottom : '0.2rem'};
 `;
 
+const StyledHeadline = styled.h1`
+  font-size: 2rem;
+  color: ${({ color }: Partial<Props>) => (color ? color : 'white')};
+  margin-bottom: ${({ marginBottom }: Partial<Props>) =>
+    marginBottom ? marginBottom : '0.2rem'};
+`;
+
 const StyledLink = styled.a<LinkProps>`
   color: white;
   font-size: ${({ variant }: LinkProps) =>
@@ -40,10 +47,15 @@ const Text = ({ variant, color, children, ...props }: Props): JSX.Element => {
           {children}
         </StyledLabel>
       )}
-      {variant !== 'label' && (
+      {variant == 'normal' && (
         <StyledText color={color} {...props}>
           {children}
         </StyledText>
+      )}
+      {variant == 'headline' && (
+        <StyledHeadline color={color} {...props}>
+          {children}
+        </StyledHeadline>
       )}
     </>
   );

@@ -17,6 +17,14 @@ const StyledInput = styled.input`
   color: white;
   box-shadow: 2px 2px 10px white;
   width: ${({ type }: Props) => type == 'number' && '3rem'};
+  margin-bottom: 0.5rem;
+
+  ::-webkit-calendar-picker-indicator {
+    background: url(https://cdn3.iconfinder.com/data/icons/linecons-free-vector-icons-pack/32/calendar-16.png)
+      center/80% no-repeat;
+    color: white;
+    cursor: pointer;
+  }
 
   ::placeholder {
     color: var(--placeholder-color);
@@ -36,6 +44,7 @@ const StyledInput = styled.input`
 const Wrapper = styled.div`
   text-align: start;
   background-color: transparent;
+  justify-self: center;
 `;
 
 const Input = ({

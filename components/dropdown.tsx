@@ -7,11 +7,14 @@ type Props = {
   label?: string;
   selected: string;
   onSelect: ChangeEventHandler<HTMLSelectElement>;
+  width?: string;
 };
 
 const Wrapper = styled.div`
   background-color: transparent;
   text-align: start;
+  margin-bottom: 0.5rem;
+  width: ${({ width }: Partial<Props>) => width && width};
 `;
 
 const StyledDropdown = styled.select`
@@ -23,16 +26,22 @@ const StyledDropdown = styled.select`
   box-shadow: 2px 2px 10px white;
 `;
 
-const Dropdown = ({ list, selected, onSelect, label }: Props): JSX.Element => {
+const Dropdown = ({
+  list,
+  selected,
+  onSelect,
+  label,
+  width,
+}: Props): JSX.Element => {
   selected = selected || 'Kein Einsatzort';
-  const listItems = list.map((item) => (
-    <option key={item} value={item}>
+  const listItems = list.map((item, index) => (
+    <option key={index} value={item}>
       {item}
     </option>
   ));
 
   return (
-    <Wrapper>
+    <Wrapper width={width}>
       {label && <Text variant="label">{label}</Text>}
       <StyledDropdown onChange={onSelect} value={selected}>
         {listItems}
