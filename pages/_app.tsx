@@ -5,12 +5,13 @@ import Menu from '../components/menu';
 import styled from 'styled-components';
 import { AuthProvider } from '../firebase/context';
 import { useRouter } from 'next/router';
+import { auth } from '../firebase';
 
 const Content = styled.div`
   margin: 2rem;
 `;
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: AppProps & any) {
   const menuPoints = [
     { linkName: 'home', href: '/' },
     { linkName: 'konzerte', href: '/concerts' },

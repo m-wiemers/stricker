@@ -1,6 +1,5 @@
 import { useContext } from 'react';
 import styled from 'styled-components';
-import Menu from '../../components/menu';
 import { CustomLink, Text } from '../../components/text';
 import { AuthContext } from '../../firebase/context';
 

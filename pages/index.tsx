@@ -4,7 +4,7 @@ import {
 } from 'firebase/auth';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Button from '../components/Button';
 import Input from '../components/Input';
@@ -12,7 +12,6 @@ import Menu from '../components/menu';
 import Modal from '../components/modal';
 import { CustomLink, Text } from '../components/text';
 import { auth } from '../firebase';
-import { AuthContext } from '../firebase/context';
 
 const Wrapper = styled.div`
   display: grid;

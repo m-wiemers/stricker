@@ -9,18 +9,19 @@ import { formatDate } from '../../helper/formatter';
 
 const Wrapper = styled.div`
   display: grid;
-  justify-content: center;
+  justify-items: center;
   text-align: center;
 `;
 
 const BandWrapper = styled.div`
   display: grid;
+  grid-column: 1/3;
   grid-template-columns: 1fr 1fr;
   min-width: 15rem;
   border: 2px solid white;
   border-radius: 10px;
   box-shadow: 2px 2px 4px white;
-  width: 100%;
+  width: 300px;
   margin-bottom: 1rem;
 `;
 
@@ -30,6 +31,7 @@ const PauseSection = styled.div`
   margin-bottom: 1rem;
   background-color: #252525;
   border-radius: 10px;
+  width: 300px;
 `;
 
 const ConcertPage = (): JSX.Element => {
@@ -87,7 +89,7 @@ const ConcertPage = (): JSX.Element => {
   return (
     <Wrapper>
       <Text variant="headline" style={{ gridColumn: '1/3' }}>
-        {formattedDate}
+        {`${formattedDate} - ${concert?.concertName}`}
       </Text>
       <>{bandSection}</>
     </Wrapper>

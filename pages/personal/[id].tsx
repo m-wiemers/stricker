@@ -9,6 +9,7 @@ import { db } from '../../firebase';
 const Wrapper = styled.div`
   display: grid;
   justify-content: center;
+  justify-items: center;
   row-gap: 0.5rem;
 `;
 
@@ -20,6 +21,15 @@ const PersonCard = styled.div`
   border-radius: 10px;
   background-color: #212121;
   text-align: center;
+  width: 300px;
+`;
+
+const Line = styled.div`
+  height: 2px;
+  width: 100%;
+  grid-column: 1/3;
+  background-color: white;
+  margin-bottom: 0.5rem;
 `;
 
 const PersonalPlanPage = (): JSX.Element => {
@@ -52,12 +62,16 @@ const PersonalPlanPage = (): JSX.Element => {
   const personals = personalPlan?.personal.map((person, index) => {
     return (
       <PersonCard key={index}>
-        <Text variant="headline" style={{ gridColumn: '1/3' }}>
+        <Text variant="normal" style={{ gridColumn: '1/3' }}>
           {person.name}
         </Text>
-        <Text variant="normal" style={{ gridColumn: '1/3' }}>
+        <Text
+          variant="normal"
+          style={{ gridColumn: '1/3', fontWeight: 'bold' }}
+        >
           {person.station}
         </Text>
+        <Line />
         <Text variant="normal">{person.startTime}</Text>
         <Text variant="normal">{person.endTime}</Text>
       </PersonCard>
