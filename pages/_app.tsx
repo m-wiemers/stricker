@@ -20,7 +20,8 @@ function MyApp({ Component, pageProps }: AppProps & any) {
 
   const dashboardMenu = [
     { linkName: 'Überblick', href: '/dashboard' },
-    { linkName: 'Konzerte', href: '/dashboard/addconcerts' },
+    { linkName: 'Konzert anlegen', href: '/dashboard/addconcerts' },
+    { linkName: 'Konzerte', href: '/dashboard/concerts' },
     { linkName: 'Mitarbeiter', href: '/dashboard/workers' },
     { linkName: 'Personalplanung', href: '/dashboard/personal' },
   ];

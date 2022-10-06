@@ -21,6 +21,7 @@ const Wrapper = styled.a`
   padding: 0.5rem;
   box-shadow: 2px 2px 4px white;
   margin-bottom: 1rem;
+  justify-self: center;
 
   :hover {
     background-color: green;

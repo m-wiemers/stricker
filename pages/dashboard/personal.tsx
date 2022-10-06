@@ -21,9 +21,8 @@ type Worker = {
 const Wrapper = styled.div`
   display: grid;
   justify-content: center;
-  grid-template-columns: 1fr;
   row-gap: 0.5rem;
-  max-width: 600px;
+  width: 100%;
 `;
 
 const StationWrapper = styled.div`
@@ -37,6 +36,7 @@ const Station = styled.p`
   font-weight: bold;
   color: blue;
   grid-column: 1/3;
+  align-self: end;
 `;
 
 type PersonPlan = {
@@ -219,7 +219,7 @@ const PersonalPlan = ({ workers, concertList }: any): JSX.Element => {
     <Wrapper>
       {user ? (
         <>
-          <Text variant="headline">Personal Plan erstellen</Text>
+          <Text variant="headline">Personalplan erstellen</Text>
           <Dropdown
             label="Konzert auswählen"
             list={concertDateList}
@@ -228,7 +228,7 @@ const PersonalPlan = ({ workers, concertList }: any): JSX.Element => {
           />
           {stationList}
           <Modal open={modal} onClick={() => setModal(false)}>
-            PersonalPlan wurde angelegt
+            Personalplan wurde angelegt
           </Modal>
           <Button
             label="Personalplan speichern"

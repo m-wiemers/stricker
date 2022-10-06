@@ -1,4 +1,4 @@
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, getDocs } from 'firebase/firestore';
 import { useContext, useState } from 'react';
 import styled from 'styled-components';
 import AddBandForm, { BandProps } from '../../components/addBandForms';

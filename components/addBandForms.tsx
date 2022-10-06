@@ -46,7 +46,7 @@ const AddBandForm = ({
   onChangePause,
   onDeleteBand,
 }: BandProps & BandVoids): JSX.Element => {
-  const [isPause, setIsPause] = useState<boolean>(false);
+  const [isPause, setIsPause] = useState<boolean>(false || pause !== undefined);
 
   return (
     <Wrapper>
