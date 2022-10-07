@@ -1,9 +1,12 @@
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 import styled from 'styled-components';
-import ConcertOverviewCard from '../../components/ConcertOverviewCard';
-import { Text } from '../../components/text';
-import { db } from '../../firebase';
-import { ConcertProps } from '../concerts';
+import ConcertOverviewCard from '../../../components/ConcertOverviewCard';
+import Modal from '../../../components/modal';
+import { Text } from '../../../components/text';
+import { db } from '../../../firebase';
+import { ConcertProps } from '../../concerts';
 
 export async function getServerSideProps() {
   const concertRef = await collection(db, 'concerts');
@@ -32,6 +35,20 @@ const Wrapper = styled.div`
 
 const Concerts = ({ concertList }: any): JSX.Element => {
   const concerts: ConcertProps[] = concertList;
+  const [modal, setModal] = useState<boolean>(false);
+  const router = useRouter();
+
+  const handleDelete = (id: string) => {
+    const concertRef = doc(db, 'concerts', id);
+    deleteDoc(concertRef).then(() => {
+      setModal(true);
+    });
+  };
+
+  const handleModalClose = () => {
+    setModal(false);
+    router.push('concerts');
+  };
 
   const concertsCards = concerts.map((concert, index) => {
     return (
@@ -42,13 +59,17 @@ const Concerts = ({ concertList }: any): JSX.Element => {
         bands={concert.bands.map((band) => band.bandName)}
         startTime={concert.bands[0].startTime}
         endTime={concert.bands[concert.bands.length - 1].endTime}
-        href={`concerts/${concert.id}`}
+        onDelete={() => handleDelete(concert.id)}
+        onEdit={() => router.push(`concerts/${concert.id}`)}
       />
     );
   });
 
   return (
     <Wrapper>
+      <Modal open={modal} onClick={handleModalClose}>
+        Konzert wurde gelöscht.
+      </Modal>
       <Text marginBottom="1rem" variant="headline">
         Angelegte Konzerte
       </Text>

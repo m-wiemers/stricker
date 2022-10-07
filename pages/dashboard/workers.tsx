@@ -5,7 +5,8 @@ import {
   getDocs,
   updateDoc,
 } from 'firebase/firestore';
-import { useContext, useEffect, useState } from 'react';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { useContext, useState } from 'react';
 import styled from 'styled-components';
 import AddWorkerModal from '../../components/AddWorkerModal';
 import Button from '../../components/Button';
@@ -14,6 +15,25 @@ import { Text } from '../../components/text';
 import Worker from '../../components/Worker';
 import { db } from '../../firebase';
 import { AuthContext } from '../../firebase/context';
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const workRef = await collection(db, 'workers');
+  const initialWorkers = await getDocs(workRef)
+    .then((snapshot) => {
+      const array: any = [];
+      snapshot.docs.forEach((doc) => {
+        array.push({ ...doc.data(), id: doc.id });
+      });
+      return array;
+    })
+    .catch((err) => console.log(err));
+
+  return {
+    props: {
+      initialWorkers,
+    },
+  };
+};
 
 type Worker = {
   id: string;
@@ -26,30 +46,15 @@ const Wrapper = styled.div`
   justify-content: center;
 `;
 
-const Personal = (): JSX.Element => {
-  const [workers, setWorkers] = useState<Worker[]>([]);
+const Personal = ({
+  initialWorkers,
+}: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element => {
+  const [workers, setWorkers] = useState<Worker[]>(initialWorkers);
   const [addModal, setAddModal] = useState<boolean>(false);
   const [modal, setModal] = useState<boolean>(false);
   const [modalMessage, setModalMessage] = useState<string>('');
   const [newWorkers, setNewWorkers] = useState<Worker[]>([]);
   const { user } = useContext(AuthContext);
-
-  useEffect(() => {
-    const readData = async () => {
-      const workRef = await collection(db, 'workers');
-      await getDocs(workRef)
-        .then((snapshot) => {
-          const array: any = [];
-          snapshot.docs.forEach((doc) => {
-            array.push({ ...doc.data(), id: doc.id });
-          });
-          setWorkers(array);
-          return array;
-        })
-        .catch((err) => console.log(err));
-    };
-    readData();
-  }, []);
 
   const handleDelete = (id: string) => {
     const workersRef = doc(db, 'workers', id);
@@ -84,7 +89,7 @@ const Personal = (): JSX.Element => {
     });
   };
 
-  const mappedWorkers = workers?.map((el, index) => (
+  const mappedWorkers = workers.map((el, index) => (
     <Worker
       key={el.id}
       id={el.id}

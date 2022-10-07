@@ -1,11 +1,36 @@
 import { doc, getDoc } from 'firebase/firestore';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import styled from 'styled-components';
 import { ConcertProps } from '.';
 import { Text } from '../../components/text';
 import { db } from '../../firebase';
 import { formatDate } from '../../helper/formatter';
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const getId = (): string => {
+    const { id } = context.query;
+    if (typeof id == 'string') {
+      return id;
+    } else {
+      return 'no data';
+    }
+  };
+
+  const concertRef = await doc(db, 'concerts', getId());
+  const concertDetails = await getDoc(concertRef)
+    .then((concert) => {
+      const data = concert.data();
+
+      return data;
+    })
+    .catch((err) => console.error(err.message));
+
+  return {
+    props: {
+      concertDetails,
+    },
+  };
+};
 
 const Wrapper = styled.div`
   display: grid;
@@ -34,39 +59,17 @@ const PauseSection = styled.div`
   width: 300px;
 `;
 
-const ConcertPage = (): JSX.Element => {
-  const router = useRouter();
-  const thisId = router.asPath.split('/').pop();
-  const [concert, setConcert] = useState<ConcertProps>();
-
-  useEffect(() => {
-    const readData = async (id: string) => {
-      const concertRef = await doc(db, 'concerts', id);
-      await getDoc(concertRef)
-        .then((concert) => {
-          const data = concert.data();
-          if (data) {
-            setConcert({
-              id: data.id,
-              date: data.date,
-              bands: data.bands,
-              concertName: data.concertName,
-            });
-          }
-        })
-        .catch((err) => console.error(err.message));
-    };
-    if (thisId) {
-      readData(thisId);
-    }
-  }, [thisId]);
+const ConcertPage = ({
+  concertDetails,
+}: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element => {
+  const concert: ConcertProps = concertDetails;
 
   const formattedDate = concert && formatDate(concert?.date);
 
-  const bandSection = concert?.bands.map((band, index) => {
+  const bandSection = concert.bands.map((band, index) => {
     return (
-      <>
-        <BandWrapper key={index}>
+      <div key={index}>
+        <BandWrapper>
           <Text variant="normal" style={{ gridColumn: '1/3' }}>
             {band.bandName}
           </Text>
@@ -82,13 +85,13 @@ const ConcertPage = (): JSX.Element => {
             </Text>
           </PauseSection>
         )}
-      </>
+      </div>
     );
   });
 
   return (
     <Wrapper>
-      <Text variant="headline" style={{ gridColumn: '1/3' }}>
+      <Text variant="headline">
         {`${formattedDate} - ${concert?.concertName}`}
       </Text>
       <>{bandSection}</>

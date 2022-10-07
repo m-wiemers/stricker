@@ -37,7 +37,7 @@ const Worker = ({
         selected={station}
         onSelect={() => onStationChange(event, id)}
       />
-      <ActionButton type="minus" onClick={() => onClick(id)} />
+      <ActionButton onClick={() => onClick(id)} />
     </Wrapper>
   );
 };

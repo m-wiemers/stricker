@@ -1,13 +1,13 @@
-import { addDoc, collection, getDocs } from 'firebase/firestore';
+import { addDoc, collection } from 'firebase/firestore';
 import { useContext, useState } from 'react';
 import styled from 'styled-components';
-import AddBandForm, { BandProps } from '../../components/addBandForms';
-import Button from '../../components/Button';
-import Input from '../../components/Input';
-import Modal from '../../components/modal';
-import { Text } from '../../components/text';
-import { db } from '../../firebase';
-import { AuthContext } from '../../firebase/context';
+import AddBandForm, { BandProps } from '../../../components/addBandForms';
+import Button from '../../../components/Button';
+import Input from '../../../components/Input';
+import Modal from '../../../components/modal';
+import { Text } from '../../../components/text';
+import { db } from '../../../firebase';
+import { AuthContext } from '../../../firebase/context';
 
 const Wrapper = styled.div`
   display: grid;

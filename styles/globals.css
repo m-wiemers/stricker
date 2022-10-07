@@ -23,6 +23,10 @@ a {
   background-color: black;
 }
 
+svg {
+  background-color: transparent;
+}
+
 :root {
   --placeholder-color: #878787;
 }

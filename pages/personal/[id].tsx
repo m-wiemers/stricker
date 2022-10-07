@@ -1,10 +1,33 @@
 import { doc, getDoc } from 'firebase/firestore';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import styled from 'styled-components';
 import { PersonalPlanProps } from '.';
 import { Text } from '../../components/text';
 import { db } from '../../firebase';
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const getId = (): string => {
+    const { id } = context.query;
+    if (typeof id == 'string') {
+      return id;
+    } else {
+      return 'no data';
+    }
+  };
+
+  const personalRef = await doc(db, 'personalPlan', getId());
+  const data = await getDoc(personalRef)
+    .then((concert) => {
+      return concert.data();
+    })
+    .catch((err) => console.error(err.message));
+
+  return {
+    props: {
+      data,
+    },
+  };
+};
 
 const Wrapper = styled.div`
   display: grid;
@@ -32,34 +55,12 @@ const Line = styled.div`
   margin-bottom: 0.5rem;
 `;
 
-const PersonalPlanPage = (): JSX.Element => {
-  const router = useRouter();
-  const thisId = router.asPath.split('/').pop();
+const PersonalPlanPage = ({
+  data,
+}: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element => {
+  const personalPlan: PersonalPlanProps = data;
 
-  const [personalPlan, setPersonalPlan] = useState<PersonalPlanProps>();
-
-  useEffect(() => {
-    const readData = async (id: string) => {
-      const concertRef = await doc(db, 'personalPlan', id);
-      await getDoc(concertRef)
-        .then((concert) => {
-          const data = concert.data();
-          if (data) {
-            setPersonalPlan({
-              concert: data.concert,
-              id: data.id,
-              personal: data.personal,
-            });
-          }
-        })
-        .catch((err) => console.error(err.message));
-    };
-    if (thisId) {
-      readData(thisId);
-    }
-  }, [thisId]);
-
-  const personals = personalPlan?.personal.map((person, index) => {
+  const personals = personalPlan.personal.map((person, index) => {
     return (
       <PersonCard key={index}>
         <Text variant="normal" style={{ gridColumn: '1/3' }}>

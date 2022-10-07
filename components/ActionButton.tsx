@@ -1,30 +1,21 @@
 import { HTMLAttributes } from 'react';
 import styled from 'styled-components';
+import DeleteIcon from './icons/deleteIcon';
 
 type Props = HTMLAttributes<HTMLDivElement> & {
-  type: 'plus' | 'minus';
   onClick: () => void;
 };
 
 const Wrapper = styled.button`
   cursor: pointer;
-  border: 2px solid white;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 10px;
+  border: none;
   margin-top: 0.5rem;
 `;
 
-const Inner = styled.p`
-  font-size: 1rem;
-`;
-
-const ActionButton = ({ type, onClick }: Props): JSX.Element => {
-  const types = type == 'plus' ? '+' : '-';
-
+const ActionButton = ({ onClick }: Props): JSX.Element => {
   return (
     <Wrapper onClick={onClick}>
-      <Inner>{types}</Inner>
+      <DeleteIcon />
     </Wrapper>
   );
 };

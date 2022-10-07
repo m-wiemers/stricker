@@ -1,6 +1,7 @@
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import AddBandForm from '../../../components/addBandForms';
 import Button from '../../../components/Button';
@@ -9,6 +10,30 @@ import Modal from '../../../components/modal';
 import { Text } from '../../../components/text';
 import { db } from '../../../firebase';
 import { ConcertProps } from '../../concerts';
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const getId = (): string => {
+    const { id } = context.query;
+    if (typeof id == 'string') {
+      return id;
+    } else {
+      return 'no data';
+    }
+  };
+
+  const concertRef = await doc(db, 'concerts', getId());
+  const data = await getDoc(concertRef)
+    .then((concert) => {
+      return concert.data();
+    })
+    .catch((err) => console.error(err.message));
+
+  return {
+    props: {
+      data,
+    },
+  };
+};
 
 const Wrapper = styled.div`
   display: grid;
@@ -20,33 +45,13 @@ const BandsWrapper = styled.div`
   width: 350px;
 `;
 
-const ConcertDetailPage = (): JSX.Element => {
+const ConcertDetailPage = ({
+  data,
+}: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element => {
   const router = useRouter();
   const thisId = router.asPath.split('/').pop();
-  const [concert, setConcert] = useState<ConcertProps>();
+  const [concert, setConcert] = useState<ConcertProps>(data);
   const [modal, setModal] = useState<boolean>(false);
-
-  useEffect(() => {
-    const readData = async (id: string) => {
-      const concertRef = await doc(db, 'concerts', id);
-      await getDoc(concertRef)
-        .then((concert) => {
-          const data = concert.data();
-          if (data) {
-            setConcert({
-              id: id,
-              date: data.date,
-              bands: data.bands,
-              concertName: data.concertName,
-            });
-          }
-        })
-        .catch((err) => console.error(err.message));
-    };
-    if (thisId) {
-      readData(thisId);
-    }
-  }, [thisId]);
 
   const handleChangeBandProps = (
     value: string,
