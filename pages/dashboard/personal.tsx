@@ -46,7 +46,7 @@ type PersonPlan = {
   endTime: string;
 };
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const workRef = await collection(db, 'workers');
   const workers = await getDocs(workRef)
     .then((snapshot) => {

@@ -6,7 +6,7 @@ import { Text } from '../../components/text';
 import { db } from '../../firebase';
 import { AuthContext } from '../../firebase/context';
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const personalRef = await collection(db, 'personalPlan');
   const personal = await getDocs(personalRef)
     .then((snapshot) => {
