@@ -47,7 +47,7 @@ const Wrapper = styled.div`
 
 const Concerts = ({ concertList }: any): JSX.Element => {
   const concerts: ConcertProps[] = concertList;
-  const user = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   const overview = concerts?.map((concert) => (
     <ConcertOverviewCard
@@ -63,7 +63,7 @@ const Concerts = ({ concertList }: any): JSX.Element => {
 
   return (
     <Wrapper>
-      {user.user ? (
+      {user ? (
         <>
           <Text variant="headline">Konzertübersicht</Text>
           {overview}

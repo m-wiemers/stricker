@@ -40,7 +40,7 @@ const Wrapper = styled.div`
 `;
 
 const Personal = ({ personal }: any): JSX.Element => {
-  const user = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const concerts: PersonalPlanProps[] = personal;
 
   const mappedConcerts = concerts.map((concert) => {
@@ -55,7 +55,7 @@ const Personal = ({ personal }: any): JSX.Element => {
 
   return (
     <>
-      {user.user ? (
+      {user ? (
         <Wrapper>
           <Text variant="headline">Personalplanung</Text>
           {mappedConcerts}

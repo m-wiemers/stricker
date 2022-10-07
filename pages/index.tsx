@@ -51,6 +51,7 @@ const Home: NextPage = (): JSX.Element => {
     signInWithEmailAndPassword(auth, email, pw).then((cred) => {
       if (cred.user.emailVerified) {
         setUserIsVerified(true);
+        console.log(auth.currentUser);
       }
       if (!cred.user.emailVerified) {
         setModalMessage(
