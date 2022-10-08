@@ -13,7 +13,7 @@ const Content = styled.div`
 
 function MyApp({ Component, pageProps }: AppProps & any) {
   const menuPoints = [
-    { linkName: 'home', href: '/' },
+    { linkName: 'home', href: '/home' },
     { linkName: 'konzerte', href: '/concerts' },
     { linkName: 'personal', href: '/personal' },
   ];

@@ -54,16 +54,16 @@ const Personal = ({ personal }: any): JSX.Element => {
   });
 
   return (
-    <>
+    <Wrapper>
       {user ? (
-        <Wrapper>
+        <>
           <Text variant="headline">Personalplanung</Text>
           {mappedConcerts}
-        </Wrapper>
+        </>
       ) : (
         <Text variant="normal">Du bist nicht angemeldet</Text>
       )}
-    </>
+    </Wrapper>
   );
 };
 

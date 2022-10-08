@@ -1,8 +1,7 @@
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
-import { Text } from '../components/text';
-import { auth } from '../firebase';
+import { CustomLink, Text } from '../components/text';
 
 const Wrapper = styled.div`
   display: grid;
@@ -12,11 +11,12 @@ const Wrapper = styled.div`
 `;
 
 const Home: NextPage = (): JSX.Element => {
-  const router = useRouter();
-
   return (
     <Wrapper>
       <Text variant="headline">Willkommen!</Text>
+      <CustomLink variant="small" href="authes/signup">
+        Noch kein Konto?
+      </CustomLink>
     </Wrapper>
   );
 };

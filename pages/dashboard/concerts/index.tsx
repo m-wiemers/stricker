@@ -1,11 +1,12 @@
 import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import styled from 'styled-components';
 import ConcertOverviewCard from '../../../components/ConcertOverviewCard';
 import Modal from '../../../components/modal';
 import { CustomLink, Text } from '../../../components/text';
 import { db } from '../../../firebase';
+import { AuthContext } from '../../../firebase/context';
 import { ConcertProps } from '../../concerts';
 
 export async function getServerSideProps() {
@@ -37,6 +38,7 @@ const Concerts = ({ concertList }: any): JSX.Element => {
   const concerts: ConcertProps[] = concertList;
   const [modal, setModal] = useState<boolean>(false);
   const router = useRouter();
+  const { user } = useContext(AuthContext);
 
   const handleDelete = (id: string) => {
     const concertRef = doc(db, 'concerts', id);
@@ -67,21 +69,27 @@ const Concerts = ({ concertList }: any): JSX.Element => {
 
   return (
     <Wrapper>
-      <Modal open={modal} onClick={handleModalClose}>
-        Konzert wurde gelöscht.
-      </Modal>
-      <CustomLink
-        variant="normal"
-        href="concerts/addconcerts"
-        color="blue"
-        style={{ fontWeight: 'bold' }}
-      >
-        Neues Konzert anlegen
-      </CustomLink>
-      <Text marginBottom="1rem" variant="headline">
-        Angelegte Konzerte
-      </Text>
-      {concertsCards}
+      {user ? (
+        <>
+          <Modal open={modal} onClick={handleModalClose}>
+            Konzert wurde gelöscht.
+          </Modal>
+          <CustomLink
+            variant="normal"
+            href="concerts/addconcerts"
+            color="blue"
+            style={{ fontWeight: 'bold' }}
+          >
+            Neues Konzert anlegen
+          </CustomLink>
+          <Text marginBottom="1rem" variant="headline">
+            Angelegte Konzerte
+          </Text>
+          {concertsCards}
+        </>
+      ) : (
+        <Text variant="normal">Du bist nicht angemeldet</Text>
+      )}
     </Wrapper>
   );
 };

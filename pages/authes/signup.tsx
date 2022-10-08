@@ -8,12 +8,13 @@ import styled from 'styled-components';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Modal from '../../components/modal';
-import { Text } from '../../components/text';
+import { CustomLink, Text } from '../../components/text';
 import { auth } from '../../firebase';
 
 const Wrapper = styled.div`
   display: grid;
   justify-content: center;
+  justify-items: center;
   row-gap: 0.5rem;
 `;
 
@@ -87,7 +88,11 @@ const SignUpPage = () => {
         label="Anmelden"
         onClick={handleSignup}
         disabled={pw !== secondPw || pw.length <= 6}
+        style={{ width: '10rem' }}
       />
+      <CustomLink variant="small" href="login">
+        Schon ein Konto? Einloggen
+      </CustomLink>
     </Wrapper>
   );
 };
