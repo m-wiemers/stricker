@@ -1,4 +1,5 @@
 import { addDoc, collection } from 'firebase/firestore';
+import { useRouter } from 'next/router';
 import { useContext, useState } from 'react';
 import styled from 'styled-components';
 import AddBandForm, { BandProps } from '../../../components/addBandForms';
@@ -15,6 +16,7 @@ const Wrapper = styled.div`
 `;
 
 const Concerts = (): JSX.Element => {
+  const router = useRouter();
   const [date, setDate] = useState<string>('2022-10-01');
   const [concertName, setConcertName] = useState<string>('');
   const [bands, setBands] = useState<BandProps[]>([]);
@@ -98,7 +100,12 @@ const Concerts = (): JSX.Element => {
     <Wrapper>
       {user ? (
         <>
-          <Modal open={modal} onClick={() => setModal(false)}>
+          <Modal
+            open={modal}
+            onClick={() => {
+              setModal(false), router.push('/dashboard/concerts');
+            }}
+          >
             {modalMessage}
           </Modal>
           <Text variant="headline">Neues Konzert anlegen</Text>

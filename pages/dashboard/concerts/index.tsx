@@ -4,7 +4,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import ConcertOverviewCard from '../../../components/ConcertOverviewCard';
 import Modal from '../../../components/modal';
-import { Text } from '../../../components/text';
+import { CustomLink, Text } from '../../../components/text';
 import { db } from '../../../firebase';
 import { ConcertProps } from '../../concerts';
 
@@ -70,6 +70,14 @@ const Concerts = ({ concertList }: any): JSX.Element => {
       <Modal open={modal} onClick={handleModalClose}>
         Konzert wurde gelöscht.
       </Modal>
+      <CustomLink
+        variant="normal"
+        href="concerts/addconcerts"
+        color="blue"
+        style={{ fontWeight: 'bold' }}
+      >
+        Neues Konzert anlegen
+      </CustomLink>
       <Text marginBottom="1rem" variant="headline">
         Angelegte Konzerte
       </Text>
