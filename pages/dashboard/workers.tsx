@@ -6,15 +6,13 @@ import {
   updateDoc,
 } from 'firebase/firestore';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import AddWorkerModal from '../../components/AddWorkerModal';
 import Button from '../../components/Button';
 import Modal from '../../components/modal';
-import { Text } from '../../components/text';
 import Worker from '../../components/Worker';
 import { db } from '../../firebase';
-import { AuthContext } from '../../firebase/context';
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const workRef = await collection(db, 'workers');
@@ -54,7 +52,6 @@ const Personal = ({
   const [modal, setModal] = useState<boolean>(false);
   const [modalMessage, setModalMessage] = useState<string>('');
   const [newWorkers, setNewWorkers] = useState<Worker[]>([]);
-  const { user } = useContext(AuthContext);
 
   const handleDelete = (id: string) => {
     const workersRef = doc(db, 'workers', id);
@@ -102,26 +99,17 @@ const Personal = ({
 
   return (
     <Wrapper>
-      {user ? (
-        <>
-          <Modal open={modal} onClick={() => setModal(false)}>
-            {modalMessage}
-          </Modal>
-          <AddWorkerModal
-            open={addModal}
-            onCloseModal={() => setAddModal(false)}
-          />
-          {mappedWorkers}
-          <Button
-            label="Neuen Mitarbeiter hinzufügen"
-            onClick={() => setAddModal(true)}
-            style={{ marginBottom: '1rem' }}
-          />
-          <Button label="Updates speichern" onClick={handleUpdateFirebase} />
-        </>
-      ) : (
-        <Text variant="normal">Du bist nicht angemeldet</Text>
-      )}
+      <Modal open={modal} onClick={() => setModal(false)}>
+        {modalMessage}
+      </Modal>
+      <AddWorkerModal open={addModal} onCloseModal={() => setAddModal(false)} />
+      {mappedWorkers}
+      <Button
+        label="Neuen Mitarbeiter hinzufügen"
+        onClick={() => setAddModal(true)}
+        style={{ marginBottom: '1rem' }}
+      />
+      <Button label="Updates speichern" onClick={handleUpdateFirebase} />
     </Wrapper>
   );
 };

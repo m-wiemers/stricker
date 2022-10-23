@@ -1,5 +1,5 @@
 import { addDoc, collection, getDocs } from 'firebase/firestore';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Button from '../../components/Button';
 import Dropdown from '../../components/dropdown';
@@ -8,7 +8,6 @@ import { Stations } from '../../components/stations';
 import { Text } from '../../components/text';
 import { WorkTimes } from '../../components/worktimes';
 import { db } from '../../firebase';
-import { AuthContext } from '../../firebase/context';
 import { formatDate } from '../../helper/formatter';
 import { ConcertProps } from '../concerts';
 
@@ -84,7 +83,6 @@ const PersonalPlan = ({ workers, concertList }: any): JSX.Element => {
   const concerts: ConcertProps[] = concertList;
   const personalList: Worker[] = workers;
   const [modal, setModal] = useState(false);
-  const { user } = useContext(AuthContext);
 
   const concertDateList = concerts.map((concert) => {
     return `${concert.concertName} - ${formatDate(concert.date)}`;
@@ -217,28 +215,22 @@ const PersonalPlan = ({ workers, concertList }: any): JSX.Element => {
 
   return (
     <Wrapper>
-      {user ? (
-        <>
-          <Text variant="headline">Personalplan erstellen</Text>
-          <Dropdown
-            label="Konzert auswählen"
-            list={concertDateList}
-            selected={selectedConcert}
-            onSelect={(e) => setSelectedConcert(e.target.value)}
-          />
-          {stationList}
-          <Modal open={modal} onClick={() => setModal(false)}>
-            Personalplan wurde angelegt
-          </Modal>
-          <Button
-            label="Personalplan speichern"
-            style={{ width: '12rem' }}
-            onClick={handleSubmit}
-          />
-        </>
-      ) : (
-        <Text variant="normal">Du bist nicht angemeldet</Text>
-      )}
+      <Text variant="headline">Personalplan erstellen</Text>
+      <Dropdown
+        label="Konzert auswählen"
+        list={concertDateList}
+        selected={selectedConcert}
+        onSelect={(e) => setSelectedConcert(e.target.value)}
+      />
+      {stationList}
+      <Modal open={modal} onClick={() => setModal(false)}>
+        Personalplan wurde angelegt
+      </Modal>
+      <Button
+        label="Personalplan speichern"
+        style={{ width: '12rem' }}
+        onClick={handleSubmit}
+      />
     </Wrapper>
   );
 };

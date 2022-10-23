@@ -1,10 +1,8 @@
 import { collection, getDocs } from 'firebase/firestore';
-import { useContext } from 'react';
 import styled from 'styled-components';
 import ConcertOverviewCard from '../../components/ConcertOverviewCard';
 import { Text } from '../../components/text';
 import { db } from '../../firebase';
-import { AuthContext } from '../../firebase/context';
 
 export async function getServerSideProps() {
   const concertRef = await collection(db, 'concerts');
@@ -47,7 +45,6 @@ const Wrapper = styled.div`
 
 const Concerts = ({ concertList }: any): JSX.Element => {
   const concerts: ConcertProps[] = concertList;
-  const { user } = useContext(AuthContext);
 
   const overview = concerts?.map((concert) => (
     <ConcertOverviewCard
@@ -63,14 +60,8 @@ const Concerts = ({ concertList }: any): JSX.Element => {
 
   return (
     <Wrapper>
-      {user ? (
-        <>
-          <Text variant="headline">Konzertübersicht</Text>
-          {overview}
-        </>
-      ) : (
-        <Text variant="normal">Du bist nicht angemeldet...</Text>
-      )}
+      <Text variant="headline">Konzertübersicht</Text>
+      {overview}
     </Wrapper>
   );
 };

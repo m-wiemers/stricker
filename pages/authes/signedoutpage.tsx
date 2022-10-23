@@ -1,4 +1,4 @@
-import { CustomLink, Text } from '../components/text';
+import { CustomLink, Text } from '../../components/text';
 
 const SignedOutPage = (): JSX.Element => {
   return (

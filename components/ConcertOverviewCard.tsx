@@ -92,10 +92,10 @@ const ConcertOverviewCard = ({
         </Wrapper>
       ) : (
         <Wrapper as="div">
-          <IconWrapper left onClick={onDelete}>
+          <IconWrapper left onClick={onDelete} title="Konzert löschen">
             <DeleteIcon />
           </IconWrapper>
-          <IconWrapper onClick={onEdit}>
+          <IconWrapper onClick={onEdit} title="Konzert bearbeiten">
             <EditIcon />
           </IconWrapper>
           <Text variant="normal" style={{ gridColumn: '1/3' }}>

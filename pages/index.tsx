@@ -1,5 +1,4 @@
 import type { NextPage } from 'next';
-import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import { CustomLink, Text } from '../components/text';
 

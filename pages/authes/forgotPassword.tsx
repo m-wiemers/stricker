@@ -27,7 +27,7 @@ const ForgotPassword = (): JSX.Element => {
       .then(() => setOpenModal(true))
       .catch((err) => console.log(err.message));
 
-    setTimeout(() => router.push('/'), 5000);
+    setTimeout(() => router.push('/authes/login'), 5000);
   };
 
   return (
@@ -49,7 +49,7 @@ const ForgotPassword = (): JSX.Element => {
         disabled={email.length <= 0}
         onClick={handlePasswortReset}
       />
-      <CustomLink variant="small" href={'/'}>
+      <CustomLink variant="small" href={'/authes/login'}>
         zurück zur Anmeldung
       </CustomLink>
     </Wrapper>

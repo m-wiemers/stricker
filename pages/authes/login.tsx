@@ -21,6 +21,7 @@ const Wrapper = styled.div`
 const LoginPage = (): JSX.Element => {
   const router = useRouter();
   const [modal, setModal] = useState<boolean>(false);
+  const [modalMessage, setModalMessage] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [pw, setPw] = useState<string>('');
 
@@ -29,22 +30,33 @@ const LoginPage = (): JSX.Element => {
   }, []);
 
   const handleSignin = () => {
-    signInWithEmailAndPassword(auth, email, pw).then((cred) => {
-      if (cred.user.emailVerified) {
-        router.push('/home');
-      }
-      if (!cred.user.emailVerified) {
-        sendEmailVerification(cred.user);
-        setModal(true);
-      }
-    });
+    signInWithEmailAndPassword(auth, email, pw)
+      .then((cred) => {
+        if (cred.user.emailVerified) {
+          router.push('/home');
+        }
+        if (!cred.user.emailVerified) {
+          sendEmailVerification(cred.user);
+          setModalMessage(
+            'Scheinbar wurde deine E-Mail-Adresse noch nicht bestätigt. Wir haben dir erneut eine E-Mail gesendet'
+          );
+          setModal(true);
+        }
+      })
+      .catch((err) => {
+        err.message.includes('auth/wrong-password')
+          ? (setModalMessage('Passwort falsch'), setModal(true))
+          : err.message.includes('auth/invalid-email')
+          ? (setModalMessage('E-Mail-Adresse falsch'), setModal(true))
+          : (setModalMessage('Unbekannter Fehler. Aber ein Fehler!'),
+            setModal(true));
+      });
   };
 
   return (
     <Wrapper>
       <Modal open={modal} onClick={() => setModal(false)}>
-        Scheinbar wurde deine E-Mail-Adresse noch nicht bestätigt. Wir haben dir
-        erneut eine E-Mail gesendet
+        {modalMessage}
       </Modal>
       <>
         <Text variant="headline">Anmelden</Text>
