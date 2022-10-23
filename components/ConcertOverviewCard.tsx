@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import styled from 'styled-components';
 import { formatDate } from '../helper/formatter';
 import DeleteIcon from './icons/deleteIcon';
@@ -31,9 +32,10 @@ const Wrapper = styled.a`
   margin-bottom: 1rem;
   justify-self: center;
   position: relative;
+  cursor: pointer;
 
   :hover {
-    background-color: ${({ href }) => (href ? 'green' : 'none')};
+    background-color: green;
   }
 `;
 
@@ -77,19 +79,21 @@ const ConcertOverviewCard = ({
   return (
     <>
       {href ? (
-        <Wrapper href={href}>
-          <Text variant="normal" style={{ gridColumn: '1/3' }}>
-            Datum: {formateDate}
-          </Text>
-          <Text variant="normal" style={{ gridColumn: '1/3' }}>
-            {concertName}
-          </Text>
-          <Line />
-          <Text variant="label">Start: {startTime}</Text>
-          <Text variant="label">Ende: {endTime}</Text>
-          <Line />
-          {bandOutput}
-        </Wrapper>
+        <Link href={href}>
+          <Wrapper>
+            <Text variant="normal" style={{ gridColumn: '1/3' }}>
+              Datum: {formateDate}
+            </Text>
+            <Text variant="normal" style={{ gridColumn: '1/3' }}>
+              {concertName}
+            </Text>
+            <Line />
+            <Text variant="label">Start: {startTime}</Text>
+            <Text variant="label">Ende: {endTime}</Text>
+            <Line />
+            {bandOutput}
+          </Wrapper>
+        </Link>
       ) : (
         <Wrapper as="div">
           <IconWrapper left onClick={onDelete} title="Konzert löschen">

@@ -103,10 +103,7 @@ function MyApp({ Component, pageProps }: AppProps & any) {
       <AuthProvider>
         <Content>
           {currentuser || superUser || router.pathname.includes('authes') ? (
-            <>
-              <Loading />
-              <Component {...pageProps} />
-            </>
+            <Component {...pageProps} />
           ) : (
             <Text variant="normal">Du bist nicht angemeldet</Text>
           )}
