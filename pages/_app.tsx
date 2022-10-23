@@ -45,18 +45,18 @@ const SUPERUSER3 = process.env.NEXT_PUBLIC_SUPERUSER3;
 function MyApp({ Component, pageProps }: AppProps & any) {
   const [superUser, setSuperUser] = useState<boolean>(false);
 
-  const user = auth.currentUser?.emailVerified;
+  const currentuser = auth.currentUser?.emailVerified;
 
-  console.log(user);
+  console.log(currentuser);
 
   useEffect(() => {
-    if (user) {
+    if (currentuser) {
       auth.currentUser?.email === SUPERUSER && setSuperUser(true);
       auth.currentUser?.email === SUPERUSER2 && setSuperUser(true);
     } else {
       setSuperUser(false);
     }
-  }, [user]);
+  }, [currentuser]);
 
   const menuPoints = [
     { linkName: 'home', href: '/home' },
@@ -86,19 +86,23 @@ function MyApp({ Component, pageProps }: AppProps & any) {
         !router.pathname.includes('dashboard') && (
           <Menu
             menuPoints={
-              router.pathname !== '/' && user ? menuPoints : loginPoints
+              router.pathname !== '/' && currentuser ? menuPoints : loginPoints
             }
-            user={user}
+            user={currentuser}
             superUser={superUser}
           />
         )}
       {router.pathname.includes('dashboard') && (
-        <Menu menuPoints={dashboardMenu} user={user} superUser={superUser} />
+        <Menu
+          menuPoints={dashboardMenu}
+          user={currentuser}
+          superUser={superUser}
+        />
       )}
 
       <AuthProvider>
         <Content>
-          {user || superUser || router.pathname.includes('authes') ? (
+          {currentuser || superUser || router.pathname.includes('authes') ? (
             <>
               <Loading />
               <Component {...pageProps} />
