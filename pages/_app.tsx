@@ -46,7 +46,9 @@ function MyApp({ Component, pageProps }: AppProps & any) {
   const [superUser, setSuperUser] = useState<boolean>(false);
 
   const user = auth.currentUser?.emailVerified;
-  console.log(SUPERUSER2);
+
+  console.log(user);
+
   useEffect(() => {
     if (user) {
       auth.currentUser?.email === SUPERUSER && setSuperUser(true);
