@@ -38,21 +38,24 @@ function Loading(): JSX.Element {
   return <>{loading && <Text variant="normal">Einen Momment bitte...</Text>}</>;
 }
 
-const SUPERUSER = process.env.NEXT_PUBLIC_SUPERUSER1;
-const SUPERUSER2 = process.env.NEXT_PUBLIC_SUPERUSER2;
-const SUPERUSER3 = process.env.NEXT_PUBLIC_SUPERUSER3;
+const SUPERUSER = process.env.NEXT_PUBLIC_FIRST_SUPERUSER;
+const SECONDSUPERUSER = process.env.NEXT_PUBLIC_SECOND_SUPERUSER;
+const THIRDSUPERUSER = process.env.NEXT_PUBLIC_THIRD_SUPERUSER;
 
 function MyApp({ Component, pageProps }: AppProps & any) {
   const [superUser, setSuperUser] = useState<boolean>(false);
 
   const currentuser = auth.currentUser?.emailVerified;
 
-  console.log(currentuser);
-
   useEffect(() => {
     if (currentuser) {
-      auth.currentUser?.email === SUPERUSER && setSuperUser(true);
-      auth.currentUser?.email === SUPERUSER2 && setSuperUser(true);
+      if (
+        auth.currentUser?.email === SUPERUSER ||
+        auth.currentUser?.email === SECONDSUPERUSER ||
+        auth.currentUser?.email === THIRDSUPERUSER
+      ) {
+        setSuperUser(true);
+      }
     } else {
       setSuperUser(false);
     }
