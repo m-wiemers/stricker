@@ -12,6 +12,7 @@ type LinkProps = HTMLAttributes<HTMLAnchorElement> & {
   variant: 'small' | 'normal';
   color?: string;
   href: string;
+  colorOnHover?: string;
 };
 
 const StyledLabel = styled.p`
@@ -37,10 +38,14 @@ const StyledHeadline = styled.h1`
 `;
 
 const StyledLink = styled.a<Partial<LinkProps>>`
-  color: ${({ color }: Partial<LinkProps>) => (color ? color : 'white')};
+  color: ${({ color }) => (color ? color : 'white')};
   cursor: pointer;
-  font-size: ${({ variant }: Partial<LinkProps>) =>
-    variant == 'small' ? '0.7rem' : '1rem'};
+  font-size: ${({ variant }) => (variant == 'small' ? '0.7rem' : '1rem')};
+
+  :hover {
+    background-color: ${({ colorOnHover }) =>
+      colorOnHover ? colorOnHover : 'none'};
+  }
 `;
 
 const Text = ({ variant, color, children, ...props }: Props): JSX.Element => {
@@ -70,10 +75,11 @@ const CustomLink = ({
   href,
   color,
   children,
+  colorOnHover,
 }: LinkProps): JSX.Element => {
   return (
     <Link href={href}>
-      <StyledLink color={color} variant={variant}>
+      <StyledLink color={color} variant={variant} colorOnHover={colorOnHover}>
         {children}
       </StyledLink>
     </Link>

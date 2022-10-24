@@ -1,15 +1,15 @@
 import { addDoc, collection, getDocs } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import Button from '../../components/Button';
-import Dropdown from '../../components/dropdown';
-import Modal from '../../components/modal';
-import { Stations } from '../../components/stations';
-import { Text } from '../../components/text';
-import { WorkTimes } from '../../components/worktimes';
-import { db } from '../../firebase';
-import { formatDate } from '../../helper/formatter';
-import { ConcertProps } from '../concerts';
+import Button from '../../../components/Button';
+import Dropdown from '../../../components/dropdown';
+import Modal from '../../../components/modal';
+import { Stations } from '../../../components/stations';
+import { Text } from '../../../components/text';
+import { WorkTimes } from '../../../components/worktimes';
+import { db } from '../../../firebase';
+import { formatDate } from '../../../helper/formatter';
+import { ConcertProps } from '../../concerts';
 
 type Worker = {
   id: string;
@@ -38,7 +38,7 @@ const Station = styled.p`
   align-self: end;
 `;
 
-type PersonPlan = {
+export type PersonPlan = {
   name: string;
   station: string;
   startTime: string;

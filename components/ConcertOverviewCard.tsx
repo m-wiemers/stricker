@@ -20,6 +20,10 @@ type IconProps = {
   left?: boolean;
 };
 
+type wrapperProps = {
+  hrefGiven: boolean;
+};
+
 const Wrapper = styled.a`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -35,7 +39,8 @@ const Wrapper = styled.a`
   cursor: pointer;
 
   :hover {
-    background-color: green;
+    background-color: ${({ hrefGiven }: wrapperProps) =>
+      hrefGiven ? 'green' : '#212121'};
   }
 `;
 
@@ -80,7 +85,7 @@ const ConcertOverviewCard = ({
     <>
       {href ? (
         <Link href={href}>
-          <Wrapper>
+          <Wrapper hrefGiven={href !== ''}>
             <Text variant="normal" style={{ gridColumn: '1/3' }}>
               Datum: {formateDate}
             </Text>
@@ -95,7 +100,7 @@ const ConcertOverviewCard = ({
           </Wrapper>
         </Link>
       ) : (
-        <Wrapper as="div">
+        <Wrapper as="div" hrefGiven={href == ''}>
           <IconWrapper left onClick={onDelete} title="Konzert löschen">
             <DeleteIcon />
           </IconWrapper>
