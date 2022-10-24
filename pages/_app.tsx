@@ -8,6 +8,7 @@ import { auth } from '../firebase';
 import { Text } from '../components/text';
 import { useEffect, useState } from 'react';
 import { AuthProvider } from '../firebase/context';
+import Home from '.';
 
 const Content = styled.div`
   margin: 2rem;
@@ -87,7 +88,8 @@ function MyApp({ Component, pageProps }: AppProps & any) {
       </Head>
 
       {!router.pathname.includes('authes') &&
-        !router.pathname.includes('dashboard') && (
+        !router.pathname.includes('dashboard') &&
+        currentuser && (
           <Menu
             menuPoints={
               router.pathname !== '/' && currentuser ? menuPoints : loginPoints
@@ -96,7 +98,7 @@ function MyApp({ Component, pageProps }: AppProps & any) {
             superUser={superUser}
           />
         )}
-      {router.pathname.includes('dashboard') && (
+      {router.pathname.includes('dashboard') && superUser && (
         <Menu
           menuPoints={dashboardMenu}
           user={currentuser}
@@ -109,7 +111,7 @@ function MyApp({ Component, pageProps }: AppProps & any) {
           {currentuser || superUser || router.pathname.includes('authes') ? (
             <Component {...pageProps} />
           ) : (
-            <Text variant="normal">Du bist nicht angemeldet</Text>
+            <Home />
           )}
         </Content>
       </AuthProvider>

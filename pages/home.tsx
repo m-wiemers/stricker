@@ -1,5 +1,7 @@
+import { useContext } from 'react';
 import styled from 'styled-components';
 import { Text } from '../components/text';
+import { AuthContext } from '../firebase/context';
 
 const Wrapper = styled.div`
   display: grid;
@@ -8,10 +10,18 @@ const Wrapper = styled.div`
 `;
 
 const HomePage = (): JSX.Element => {
+  const { user } = useContext(AuthContext);
+
   return (
-    <Wrapper>
-      <Text variant="headline">Wilkommen</Text>
-    </Wrapper>
+    <>
+      {user && (
+        <Wrapper>
+          <Text variant="headline">Wilkommen</Text>
+          <Text variant="normal">{`Hallo! Du bist angemeldet mit der E-Mail-Adresse: ${user.email}`}</Text>
+          <Text variant="normal">Nice, dass du wieder da bist</Text>
+        </Wrapper>
+      )}
+    </>
   );
 };
 
