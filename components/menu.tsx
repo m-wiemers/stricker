@@ -5,29 +5,32 @@ import { useRouter } from 'next/router';
 import Button from './Button';
 
 type Props = {
-  menuPoints: MenuPoint[];
+  menuPoints: MenuPointProps[];
   user?: boolean;
   superUser?: boolean;
 };
 
-type MenuPoint = {
+type MenuPointProps = {
   linkName: string;
   href: string;
 };
 
 const Container = styled.div`
-  width: 100%;
-  padding: 1rem;
-  display: grid;
-  justify-items: center;
   border-bottom: solid 3px white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-  @media (min-width: 768px) {
+  @media only screen and (min-width: 768px) {
+    padding: 1rem;
+    display: grid;
     grid-template-columns: repeat(6, 1fr);
+    justify-items: center;
   }
 `;
 
-const MenuPoint = styled.a`
+const MenuPointWrapper = styled.a`
+  width: max-content;
   color: white;
   text-transform: uppercase;
   padding: 0.5rem;
@@ -48,18 +51,18 @@ const Menu = ({ menuPoints, user, superUser }: Props): JSX.Element => {
     router.push('/authes/signedoutpage');
   };
 
-  const points = menuPoints.map((el: MenuPoint, key: number) => (
+  const points = menuPoints.map((el: MenuPointProps, key: number) => (
     <Link key={key} href={el.href}>
-      <MenuPoint>{el.linkName}</MenuPoint>
+      <MenuPointWrapper>{el.linkName}</MenuPointWrapper>
     </Link>
   ));
 
   return (
     <Container>
       {points}
-      {superUser && (
+      {superUser && !router.pathname.includes('dashboard') && (
         <Link href={'/dashboard'}>
-          <MenuPoint>Dashboard</MenuPoint>
+          <MenuPointWrapper>Dashboard</MenuPointWrapper>
         </Link>
       )}
       {user && (

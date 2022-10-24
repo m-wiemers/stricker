@@ -1,7 +1,6 @@
 import { collection, getDocs } from 'firebase/firestore';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import styled from 'styled-components';
-import EditIcon from '../../../components/icons/editIcon';
 import { CustomLink, Text } from '../../../components/text';
 import { db } from '../../../firebase';
 

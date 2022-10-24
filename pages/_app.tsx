@@ -70,6 +70,7 @@ function MyApp({ Component, pageProps }: AppProps & any) {
   const loginPoints = [{ linkName: 'login', href: '/authes/login' }];
 
   const dashboardMenu = [
+    { linkName: 'Home', href: '/home' },
     { linkName: 'Konzerte', href: '/dashboard/concerts' },
     { linkName: 'Mitarbeiter', href: '/dashboard/workers' },
     { linkName: 'Personalplanung', href: '/dashboard/personal' },
