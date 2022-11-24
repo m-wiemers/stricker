@@ -83,6 +83,7 @@ const AddBandForm = ({
             type="number"
             label="Minuten"
             placeholder="15"
+            defaultValue="15"
             value={pause}
             onChange={onChangePause}
           />

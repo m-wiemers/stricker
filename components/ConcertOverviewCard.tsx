@@ -49,6 +49,7 @@ const Line = styled.div`
   width: 100%;
   background-color: white;
   grid-column: 1/3;
+  margin-top: 0.5rem;
 `;
 
 const IconWrapper = styled.button`

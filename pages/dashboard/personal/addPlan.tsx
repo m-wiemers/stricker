@@ -69,15 +69,27 @@ export async function getServerSideProps() {
     })
     .catch((err) => console.log(err));
 
+  const personalPlanRef = await collection(db, 'personalPlan');
+  const planIds = await getDocs(personalPlanRef)
+    .then((snapshot) => {
+      const array: any = [];
+      snapshot.docs.forEach((doc) => {
+        array.push({ ...doc.data(), id: doc.id });
+      });
+      return array;
+    })
+    .catch((err) => console.log(err));
+
   return {
     props: {
       workers,
       concertList,
+      planIds,
     },
   };
 }
 
-const PersonalPlan = ({ workers, concertList }: any): JSX.Element => {
+const PersonalPlan = ({ workers, concertList, planIds }: any): JSX.Element => {
   const [selectedConcert, setSelectedConcert] = useState<string>('');
   const [personal, setPersonal] = useState<PersonPlan[]>([]);
   const concerts: ConcertProps[] = concertList;

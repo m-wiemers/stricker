@@ -1,6 +1,9 @@
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import styled from 'styled-components';
+import PersonalOverviewCard from '../../../components/PersonalOverviewCard';
 import { CustomLink, Text } from '../../../components/text';
 import { db } from '../../../firebase';
 
@@ -21,12 +24,8 @@ const Wrapper = styled.div`
   width: 100%;
 `;
 
-const LinkWrapper = styled.div`
-  margin-bottom: 1rem;
+const ListWrapper = styled.div`
   justify-self: center;
-  padding: 1rem;
-  border-radius: 10px;
-  border: 2px solid white;
 `;
 
 export const getServerSideProps: GetServerSideProps = async () => {
@@ -51,16 +50,23 @@ export const getServerSideProps: GetServerSideProps = async () => {
 const PersonalPlan = ({
   plans,
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element => {
-  const planList = plans.map((concert: PlanProps, index: number) => (
-    <LinkWrapper key={index}>
-      <CustomLink
-        href={`personal/${concert.id}`}
-        variant="normal"
-        colorOnHover="green"
-      >
-        {concert.concert}
-      </CustomLink>
-    </LinkWrapper>
+  const router = useRouter();
+
+  const handleDelete = (id: string) => {
+    const personalPlanRef = doc(db, 'personalPlan', id);
+    deleteDoc(personalPlanRef).then(() => {
+      router.push('personal');
+    });
+  };
+
+  const planList = plans.map((plan: PlanProps, index: number) => (
+    <PersonalOverviewCard
+      key={index}
+      concert={plan.concert}
+      isDashboard
+      onEdit={() => router.push(`personal/${plan.id}`)}
+      onDelete={() => handleDelete(plan.id)}
+    />
   ));
 
   return (
@@ -72,7 +78,7 @@ const PersonalPlan = ({
       <Text marginBottom="1rem" variant="headline">
         Angelegte Pläne bearbeiten:
       </Text>
-      {planList}
+      <ListWrapper>{planList}</ListWrapper>
     </Wrapper>
   );
 };
