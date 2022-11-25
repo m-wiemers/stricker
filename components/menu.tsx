@@ -27,6 +27,10 @@ const Wrapper = styled.div`
   justify-content: end;
   padding-right: 0.5rem;
   border-bottom: solid 3px white;
+
+  @media only screen and (min-width: 767px) {
+    border-bottom: none;
+  }
 `;
 
 const Container = styled.div`
