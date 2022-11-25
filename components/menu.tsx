@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { auth } from '../firebase';
 import { useRouter } from 'next/router';
 import Button from './Button';
-import { Text } from './text';
+import BurgerButton from './BurgerButton';
+import { useState } from 'react';
 
 type Props = {
   menuPoints: MenuPointProps[];
@@ -11,10 +12,22 @@ type Props = {
   superUser?: boolean;
 };
 
+type ShowProps = {
+  isOpen: boolean;
+};
+
 type MenuPointProps = {
   linkName: string;
   href: string;
 };
+
+const Wrapper = styled.div`
+  display: grid;
+  width: 100%;
+  justify-content: end;
+  padding-right: 0.5rem;
+  border-bottom: solid 3px white;
+`;
 
 const Container = styled.div`
   border-bottom: solid 3px white;
@@ -27,6 +40,11 @@ const Container = styled.div`
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     justify-items: center;
+  }
+
+  @media only screen and (max-width: 767px) {
+    display: ${({ isOpen }: ShowProps) => (isOpen ? 'flex' : 'none')};
+    align-items: center;
   }
 `;
 
@@ -46,6 +64,7 @@ const MenuPointWrapper = styled.a`
 
 const Menu = ({ menuPoints, user, superUser }: Props): JSX.Element => {
   const router = useRouter();
+  const [openMenu, setOpenMenu] = useState<boolean>(false);
 
   const handleSignout = () => {
     auth.signOut();
@@ -59,21 +78,26 @@ const Menu = ({ menuPoints, user, superUser }: Props): JSX.Element => {
   ));
 
   return (
-    <Container>
-      {points}
-      {superUser && !router.pathname.includes('dashboard') && (
-        <Link href={'/dashboard'}>
-          <MenuPointWrapper>Dashboard</MenuPointWrapper>
-        </Link>
-      )}
-      {user && (
-        <Button
-          label="Logout"
-          onClick={handleSignout}
-          style={{ gridColumn: '6', gridColumnEnd: 'end' }}
-        />
-      )}
-    </Container>
+    <>
+      <Wrapper>
+        <BurgerButton onClick={() => setOpenMenu(!openMenu)} />
+      </Wrapper>
+      <Container isOpen={openMenu}>
+        {points}
+        {superUser && !router.pathname.includes('dashboard') && (
+          <Link href={'/dashboard'}>
+            <MenuPointWrapper>Dashboard</MenuPointWrapper>
+          </Link>
+        )}
+        {user && (
+          <Button
+            label="Logout"
+            onClick={handleSignout}
+            style={{ gridColumn: '6', gridColumnEnd: 'end' }}
+          />
+        )}
+      </Container>
+    </>
   );
 };
 
