@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import styled from 'styled-components';
 import Input from '../../components/Input';
 import TimeInput from '../../components/TimeInput';
+import { AuthContext } from '../../firebase/context';
 import { DateToString } from '../../helper/dateToString';
 
 const Wrapper = styled.div`
@@ -19,10 +20,21 @@ const InnerWrapper = styled.div`
 `;
 
 const AddTimePage = (): JSX.Element => {
+  const { user } = useContext(AuthContext);
   const today = DateToString({ today: true });
-  const [name, setName] = useState<string>('');
+  const [name, setName] = useState<string>(user.displayName || '');
   const [date, setDate] = useState<string>(today);
   const [startTime, setStartTime] = useState<`${string}:${string}`>('18:00');
+
+  const handleChange = (value: string, target: string) => {
+    if (target === 'hour') {
+      setStartTime(`${value}:${startTime.split(':').pop()}`);
+    }
+
+    if (target === 'minute') {
+      setStartTime(`${startTime.slice(0, 2)}:${value}`);
+    }
+  };
 
   return (
     <Wrapper>
@@ -39,7 +51,7 @@ const AddTimePage = (): JSX.Element => {
           value={date}
           onChange={(e) => setDate(e.target.value)}
         />
-        <TimeInput defaultValue={startTime} />
+        <TimeInput value={startTime} handleChange={handleChange} />
       </InnerWrapper>
     </Wrapper>
   );

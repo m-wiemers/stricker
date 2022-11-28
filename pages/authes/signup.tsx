@@ -1,6 +1,7 @@
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  updateProfile,
 } from 'firebase/auth';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -21,6 +22,7 @@ const Wrapper = styled.div`
 const SignUpPage = () => {
   const router = useRouter();
   const [email, setEmail] = useState<string>('');
+  const [userName, setUserName] = useState<string>('');
   const [pw, setPw] = useState<string>('');
   const [secondPw, setSecondPw] = useState<string>('');
   const [firstError, setFirstError] = useState<string>('');
@@ -34,6 +36,7 @@ const SignUpPage = () => {
         setModalMessage(
           'Prima! Das hat geklappt! Bitte bestätige deinen Zugang in der Email, die wir die gesendet haben'
         );
+        updateProfile(cred.user, { displayName: userName });
         setModal(true);
       })
       .catch((err) => {
@@ -68,6 +71,13 @@ const SignUpPage = () => {
         label="E-Mail-Adresse"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+      />
+      <Input
+        type="text"
+        label="Nutzername"
+        value={userName}
+        onChange={(e) => setUserName(e.target.value)}
+        required
       />
       <Input
         type="password"
