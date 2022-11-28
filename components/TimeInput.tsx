@@ -5,7 +5,8 @@ import Input from './Input';
 
 type Props = {
   handleChange: (value: string, target: string) => void;
-  value: string;
+  value: `${string}:${string}`;
+  label?: string;
 };
 
 type SelectProps = {
@@ -25,7 +26,7 @@ const Select = styled.div`
   background-color: white;
   position: absolute;
   display: ${({ isOpen }: SelectProps) => (isOpen ? 'grid' : 'none')};
-
+  z-index: ${({ isOpen }: SelectProps) => (isOpen ? '100' : 'inherit')};
   grid-template-columns: 1fr 1fr;
 `;
 
@@ -46,7 +47,7 @@ const InnerSelect = styled.div`
   max-height: 200px;
 `;
 
-const TimeInput = ({ handleChange, value }: Props): JSX.Element => {
+const TimeInput = ({ handleChange, value, label }: Props): JSX.Element => {
   const [openSelect, setOpenSelect] = useState<boolean>(false);
 
   useEffect(() => {
@@ -91,6 +92,7 @@ const TimeInput = ({ handleChange, value }: Props): JSX.Element => {
         onFocus={() => setOpenSelect(true)}
         value={value}
         id="input"
+        label={label}
       />
       <Select isOpen={openSelect} onMouseLeave={() => setOpenSelect(false)}>
         <InnerSelect>{hourSelect}</InnerSelect>

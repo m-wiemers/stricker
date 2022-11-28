@@ -19,20 +19,36 @@ const InnerWrapper = styled.div`
   justify-content: center;
 `;
 
+const TimeInputWrapper = styled.div`
+  display: flex;
+  column-gap: 0.5rem;
+`;
+
 const AddTimePage = (): JSX.Element => {
   const { user } = useContext(AuthContext);
   const today = DateToString({ today: true });
   const [name, setName] = useState<string>(user.displayName || '');
   const [date, setDate] = useState<string>(today);
   const [startTime, setStartTime] = useState<`${string}:${string}`>('18:00');
+  const [endTime, setEndTime] = useState<`${string}:${string}`>('23:45');
 
-  const handleChange = (value: string, target: string) => {
+  const handleChange = (value: string, target: string, time: string) => {
     if (target === 'hour') {
-      setStartTime(`${value}:${startTime.split(':').pop()}`);
+      if (time == 'start') {
+        setStartTime(`${value}:${startTime.split(':').pop()}`);
+      }
+      if (time == 'end') {
+        setEndTime(`${value}:${endTime.split(':').pop()}`);
+      }
     }
 
     if (target === 'minute') {
-      setStartTime(`${startTime.slice(0, 2)}:${value}`);
+      if (time === 'start') {
+        setStartTime(`${startTime.slice(0, 2)}:${value}`);
+      }
+      if (time === 'end') {
+        setEndTime(`${endTime.slice(0, 2)}:${value}`);
+      }
     }
   };
 
@@ -51,7 +67,18 @@ const AddTimePage = (): JSX.Element => {
           value={date}
           onChange={(e) => setDate(e.target.value)}
         />
-        <TimeInput value={startTime} handleChange={handleChange} />
+        <TimeInputWrapper>
+          <TimeInput
+            label="Start"
+            value={startTime}
+            handleChange={(val, target) => handleChange(val, target, 'start')}
+          />
+          <TimeInput
+            label="Ende"
+            value={endTime}
+            handleChange={(val, target) => handleChange(val, target, 'end')}
+          />
+        </TimeInputWrapper>
       </InnerWrapper>
     </Wrapper>
   );

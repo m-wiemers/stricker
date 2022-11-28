@@ -3,6 +3,7 @@ import {
   sendEmailVerification,
   updateProfile,
 } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import styled from 'styled-components';
@@ -10,7 +11,7 @@ import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Modal from '../../components/modal';
 import { CustomLink, Text } from '../../components/text';
-import { auth } from '../../firebase';
+import { auth, db } from '../../firebase';
 
 const Wrapper = styled.div`
   display: grid;
@@ -37,6 +38,7 @@ const SignUpPage = () => {
           'Prima! Das hat geklappt! Bitte bestätige deinen Zugang in der Email, die wir die gesendet haben'
         );
         updateProfile(cred.user, { displayName: userName });
+        setDoc(doc(db, 'users', cred.user.uid), {});
         setModal(true);
       })
       .catch((err) => {
