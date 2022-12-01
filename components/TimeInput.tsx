@@ -93,6 +93,7 @@ const TimeInput = ({ handleChange, value, label }: Props): JSX.Element => {
         value={value}
         id="input"
         label={label}
+        readOnly
       />
       <Select isOpen={openSelect} onMouseLeave={() => setOpenSelect(false)}>
         <InnerSelect>{hourSelect}</InnerSelect>

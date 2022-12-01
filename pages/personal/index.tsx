@@ -16,6 +16,8 @@ export async function getServerSideProps() {
     })
     .catch((err) => console.log(err));
 
+  personal.sort((a: any, b: any) => (a > b ? 1 : b > a ? -1 : 0));
+
   return {
     props: {
       personal,

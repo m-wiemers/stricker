@@ -1,13 +1,15 @@
-import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
 import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Modal from '../../components/modal';
+import { Text } from '../../components/text';
 import TimeInput from '../../components/TimeInput';
 import { db } from '../../firebase';
 import { AuthContext } from '../../firebase/context';
 import { DateToString } from '../../helper/dateToString';
+import getTimeBetween from '../../helper/getTimeBetween';
 
 const Wrapper = styled.div`
   display: grid;
@@ -25,40 +27,10 @@ const InnerWrapper = styled.div`
 `;
 
 const TimeInputWrapper = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   column-gap: 0.5rem;
 `;
-
-const getMinutesBetween = (end: number, start: number) => {
-  let mEnd = 0;
-  switch (end) {
-    case 15:
-      mEnd = 0.25;
-      break;
-    case 30:
-      mEnd = 0.5;
-      break;
-    case 45:
-      mEnd = 0.75;
-      break;
-  }
-
-  let mStart = 0;
-  switch (start) {
-    case 15:
-      mStart = 0.25;
-      break;
-    case 30:
-      mStart = 0.5;
-      break;
-    case 45:
-      mStart = 0.75;
-      break;
-  }
-
-  const diff = mEnd + mStart;
-  return diff;
-};
 
 const AddTimePage = (): JSX.Element => {
   const { user } = useContext(AuthContext);
@@ -69,22 +41,21 @@ const AddTimePage = (): JSX.Element => {
   const [endTime, setEndTime] = useState<`${string}:${string}`>('23:45');
   const [duration, setDuration] = useState<string>('');
   const [modal, setModal] = useState<boolean>(false);
+  const [submitted, setSubmitted] = useState<boolean>(false);
+  const [mustSubmitted, setMustSubmitted] = useState<boolean>(false);
+  const [paid, setPaid] = useState<boolean>(false);
 
   useEffect(() => {
-    const endExt = ` ${endTime}:00`;
-    const startExt = ` ${startTime}:00`;
-
-    const endHour = new Date(date + endExt).getHours();
-    const startHour = new Date(date + startExt).getHours();
-    let hDiff = endHour - startHour;
-    if (hDiff < 0) {
-      hDiff = 24 + hDiff;
+    if (paid) {
+      setSubmitted(true);
+      setMustSubmitted(true);
+    } else {
+      setMustSubmitted(false);
     }
+  }, [paid]);
 
-    const endMin = new Date(date + endExt).getMinutes();
-    const startMin = new Date(date + startExt).getMinutes();
-
-    console.log(getMinutesBetween(endMin, startMin) + hDiff);
+  useEffect(() => {
+    setDuration(getTimeBetween({ endTime, startTime, date }));
   }, [startTime, endTime, date]);
 
   const handleChange = (value: string, target: string, time: string) => {
@@ -107,9 +78,18 @@ const AddTimePage = (): JSX.Element => {
     }
   };
 
-  const handleSubmit = () => {
-    const userRef = doc(db, 'users', user.uid);
-    updateDoc(userRef, { [date]: [startTime, endTime] })
+  const handleSubmit = async () => {
+    const userCollection = collection(db, 'users', user.uid, 'times');
+    const timesDoc = doc(userCollection);
+
+    setDoc(timesDoc, {
+      date,
+      startTime,
+      endTime,
+      duration,
+      submitted,
+      paid,
+    })
       .then(() => setModal(true))
       .catch((err) => console.error(err.message));
   };
@@ -143,7 +123,21 @@ const AddTimePage = (): JSX.Element => {
             value={endTime}
             handleChange={(val, target) => handleChange(val, target, 'end')}
           />
+          <Input
+            type="checkbox"
+            label="Eingereicht"
+            checked={submitted}
+            onChange={() => setSubmitted(!submitted)}
+            disabled={mustSubmitted}
+          />
+          <Input
+            type="checkbox"
+            label="Ausgezahlt"
+            checked={paid}
+            onChange={() => setPaid(!paid)}
+          />
         </TimeInputWrapper>
+        <Text variant="normal">Du hast {duration} h gearbeitet</Text>
         <Button label="Speichern" onClick={handleSubmit} />
       </InnerWrapper>
     </Wrapper>

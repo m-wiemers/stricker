@@ -16,6 +16,10 @@ export async function getServerSideProps() {
     })
     .catch((err) => console.log(err));
 
+  concertList.sort((a: any, b: any) =>
+    a.date > b.date ? 1 : b.date > a.date ? -1 : 0
+  );
+
   return {
     props: {
       concertList,
