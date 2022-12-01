@@ -64,8 +64,8 @@ const TimesCard = ({
       <Text style={{ gridColumn: '1/3' }} variant="normal">
         Stunden: {duration}
       </Text>
-      <Input type="checkbox" label="Eingereicht" checked={submitted} />
-      <Input type="checkbox" label="Ausbezahlt" checked={paid} />
+      <Input type="checkbox" label="Eingereicht" defaultChecked={submitted} />
+      <Input type="checkbox" label="Ausbezahlt" defaultChecked={paid} />
     </Wrapper>
   );
 };

@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
+import { collection, doc, setDoc } from 'firebase/firestore';
 import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Button from '../../components/Button';
