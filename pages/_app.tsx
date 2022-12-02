@@ -66,6 +66,7 @@ function MyApp({ Component, pageProps }: AppProps & any) {
     { linkName: 'home', href: '/home' },
     { linkName: 'konzerte', href: '/concerts' },
     { linkName: 'personal', href: '/personal' },
+    { linkName: 'Zeiten', href: `/times?user=${auth.currentUser?.uid}` },
   ];
 
   const loginPoints = [{ linkName: 'login', href: '/authes/login' }];

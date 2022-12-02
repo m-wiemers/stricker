@@ -41,10 +41,14 @@ const StyledInput = styled.input`
   }
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<Partial<Props>>`
   text-align: start;
   background-color: transparent;
   justify-self: center;
+
+  display: ${({ type }) => type == 'checkbox' && 'flex'};
+  width: ${({ type }) => type == 'checkbox' && 'max-content'};
+  align-items: ${({ type }) => type == 'checkbox' && 'center'};
 `;
 
 const Input = ({
@@ -54,7 +58,7 @@ const Input = ({
   ...props
 }: Props): JSX.Element => {
   return (
-    <Wrapper>
+    <Wrapper type={props.type}>
       {label && (
         <Text style={{ marginBottom: '0.2rem' }} variant="label">
           {label}

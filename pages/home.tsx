@@ -16,7 +16,7 @@ const HomePage = (): JSX.Element => {
     <>
       {user && (
         <Wrapper>
-          <Text variant="headline">Wilkommen</Text>
+          <Text variant="headline">{`Wilkommen ${user.displayName}`}</Text>
           <Text variant="normal">{`Hallo! Du bist angemeldet mit der E-Mail-Adresse: ${user.email}`}</Text>
           <Text variant="normal">Nice, dass du wieder da bist</Text>
         </Wrapper>
