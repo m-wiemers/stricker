@@ -1,15 +1,19 @@
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { InferGetServerSidePropsType } from 'next';
+import { useRouter } from 'next/router';
+import { useContext, useState } from 'react';
 import styled from 'styled-components';
+import Button from '../../components/Button';
 import { CustomLink } from '../../components/text';
 import TimesCard, { Times } from '../../components/TimesCard';
 import { db } from '../../firebase';
+import { AuthContext } from '../../firebase/context';
 
 export async function getServerSideProps(context: any) {
   const { user } = context.query;
 
   const timesRef = await collection(db, 'users', user, 'times');
-  const times = await getDocs(timesRef)
+  const currentTimes = await getDocs(timesRef)
     .then((snapshot) => {
       const array: any = [];
       snapshot.docs.forEach((doc) => {
@@ -19,13 +23,13 @@ export async function getServerSideProps(context: any) {
     })
     .catch((err) => console.log(err));
 
-  times.sort((a: any, b: any) =>
+  currentTimes.sort((a: any, b: any) =>
     a.date > b.date ? 1 : b.date > a.date ? -1 : 0
   );
 
   return {
     props: {
-      times,
+      currentTimes,
     },
   };
 }
@@ -37,14 +41,39 @@ const Wrapper = styled.div`
 `;
 
 const InnerWrapper = styled.div`
-  max-width: 420px;
-  min-width: 420px;
+  min-width: 370px;
+  max-width: 370px;
 `;
 
 const TimesOverviewPage = ({
-  times,
+  currentTimes,
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element => {
-  const mappedTimes = times.map((time: Times) => (
+  const router = useRouter();
+  const [times, setTimes] = useState<Times[]>(currentTimes);
+
+  const handleDelete = (id: string) => {};
+  const handleChange = (index: number, target: string) => {
+    const timesClone = [...times];
+    switch (target) {
+      case 'paid':
+        if (timesClone[index].paid == true) {
+          timesClone[index].paid = false;
+        } else {
+          timesClone[index].paid = true;
+        }
+        break;
+      case 'submit':
+        if (timesClone[index].submitted == true) {
+          timesClone[index].submitted = false;
+        } else {
+          timesClone[index].submitted = true;
+        }
+        break;
+    }
+    setTimes(timesClone);
+  };
+
+  const mappedTimes = times.map((time: Times, index) => (
     <TimesCard
       key={time.id}
       id={time.id}
@@ -54,6 +83,10 @@ const TimesOverviewPage = ({
       duration={time.duration}
       submitted={time.submitted}
       paid={time.paid}
+      onEdit={(id) => router.push(`times/${id}`)}
+      onDelete={(id) => handleDelete(id)}
+      onCheckPaid={() => handleChange(index, 'paid')}
+      onCheckSubmitted={() => handleChange(index, 'submit')}
     />
   ));
 

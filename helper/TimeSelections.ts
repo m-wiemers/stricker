@@ -16,17 +16,27 @@ export const Hours: string[] = [
 
 export const Minutes: string[] = ['00', '15', '30', '45'];
 
-export const Months: { value: string; index: number }[] = [
-  { value: 'Januar', index: 0 },
-  { value: 'Februrar', index: 1 },
-  { value: 'März', index: 2 },
-  { value: 'April', index: 3 },
-  { value: 'Mai', index: 4 },
-  { value: 'Juni', index: 5 },
-  { value: 'Juli', index: 6 },
-  { value: 'August', index: 7 },
-  { value: 'September', index: 8 },
-  { value: 'Oktober', index: 9 },
-  { value: 'November', index: 10 },
-  { value: 'Dezember', index: 11 },
+export const Months: { value: string; monthNumber: string; index: number }[] = [
+  { value: 'Januar', monthNumber: '01', index: 0 },
+  { value: 'Februrar', monthNumber: '02', index: 1 },
+  { value: 'März', monthNumber: '03', index: 2 },
+  { value: 'April', monthNumber: '04', index: 3 },
+  { value: 'Mai', monthNumber: '05', index: 4 },
+  { value: 'Juni', monthNumber: '06', index: 5 },
+  { value: 'Juli', monthNumber: '07', index: 6 },
+  { value: 'August', monthNumber: '08', index: 7 },
+  { value: 'September', monthNumber: '09', index: 8 },
+  { value: 'Oktober', monthNumber: '10', index: 9 },
+  { value: 'November', monthNumber: '11', index: 10 },
+  { value: 'Dezember', monthNumber: '12', index: 11 },
 ];
+
+export const getMonthAsSting = (value: string): string => {
+  const monthString = Months.find((date) => date.monthNumber == value);
+
+  if (monthString) {
+    return monthString.value;
+  } else {
+    return '';
+  }
+};

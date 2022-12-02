@@ -1,9 +1,17 @@
+import { ChangeEvent } from 'react';
 import styled from 'styled-components';
 import { formatDate } from '../helper/formatter';
 import DeleteIcon from './icons/deleteIcon';
 import EditIcon from './icons/editIcon';
 import Input from './Input';
 import { Text } from './text';
+
+type Props = {
+  onDelete: (id: string) => void;
+  onEdit: (id: string) => void;
+  onCheckSubmitted: (index: ChangeEvent) => void;
+  onCheckPaid: (index: ChangeEvent) => void;
+};
 
 export type Times = {
   id: string;
@@ -47,13 +55,18 @@ const TimesCard = ({
   duration,
   submitted,
   paid,
-}: Times): JSX.Element => {
+  id,
+  onDelete,
+  onEdit,
+  onCheckPaid,
+  onCheckSubmitted,
+}: Times & Props): JSX.Element => {
   return (
     <Wrapper>
-      <IconWrapper title="Löschen">
+      <IconWrapper title="Löschen" onClick={() => onDelete(id)}>
         <DeleteIcon />
       </IconWrapper>
-      <IconWrapper left title="Bearbeiten">
+      <IconWrapper left title="Bearbeiten" onClick={() => onEdit(id)}>
         <EditIcon />
       </IconWrapper>
       <Text style={{ gridColumn: '1/3' }} variant="normal">
@@ -64,8 +77,18 @@ const TimesCard = ({
       <Text style={{ gridColumn: '1/3' }} variant="normal">
         Stunden: {duration}
       </Text>
-      <Input type="checkbox" label="Eingereicht" defaultChecked={submitted} />
-      <Input type="checkbox" label="Ausbezahlt" defaultChecked={paid} />
+      <Input
+        type="checkbox"
+        label="Eingereicht"
+        defaultChecked={submitted}
+        onChange={(index) => onCheckSubmitted(index)}
+      />
+      <Input
+        type="checkbox"
+        label="Ausbezahlt"
+        defaultChecked={paid}
+        onChange={(index) => onCheckPaid(index)}
+      />
     </Wrapper>
   );
 };
