@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { formatDate } from '../helper/formatter';
 import DeleteIcon from './icons/deleteIcon';
@@ -16,8 +16,8 @@ type Props = {
 export type Times = {
   id: string;
   date: string;
-  startTime: string;
-  endTime: string;
+  startTime: `${string}:${string}`;
+  endTime: `${string}:${string}`;
   duration: string;
   submitted: boolean;
   paid: boolean;

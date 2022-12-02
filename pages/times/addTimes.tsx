@@ -1,4 +1,3 @@
-import { collection, doc, setDoc } from 'firebase/firestore';
 import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Button from '../../components/Button';
@@ -6,10 +5,10 @@ import Input from '../../components/Input';
 import Modal from '../../components/modal';
 import { Text } from '../../components/text';
 import TimeInput from '../../components/TimeInput';
-import { db } from '../../firebase';
 import { AuthContext } from '../../firebase/context';
 import { DateToString } from '../../helper/dateToString';
 import getTimeBetween from '../../helper/getTimeBetween';
+import { addTimesToFB } from '../../helper/writeToFB';
 
 const Wrapper = styled.div`
   display: grid;
@@ -78,25 +77,31 @@ const AddTimePage = (): JSX.Element => {
     }
   };
 
-  const handleSubmit = async () => {
-    const userCollection = collection(db, 'users', user.uid, 'times');
-    const timesDoc = doc(userCollection);
-
-    setDoc(timesDoc, {
+  const handleSubmit = () => {
+    addTimesToFB({
+      userId: user.uid,
       date,
       startTime,
       endTime,
       duration,
       submitted,
       paid,
-    })
-      .then(() => setModal(true))
-      .catch((err) => console.error(err.message));
+      handleThen: () => setModal(true),
+    });
+  };
+
+  const handleModalClose = () => {
+    setModal(false);
+    setDate(today);
+    setStartTime('18:00');
+    setEndTime('23:45');
+    setSubmitted(false);
+    setPaid(false);
   };
 
   return (
     <Wrapper>
-      <Modal open={modal} onClick={() => setModal(false)}>
+      <Modal open={modal} onClick={handleModalClose}>
         Zeiten gespeichert
       </Modal>
       <InnerWrapper>
