@@ -8,21 +8,13 @@ import { CustomLink } from '../../components/text';
 import TimesCard, { Times } from '../../components/TimesCard';
 import { db } from '../../firebase';
 import { AuthContext } from '../../firebase/context';
-import { updateTimesToFB } from '../../helper/writeToFB';
+import { getTimes } from '../../helper/firebase/getTimes';
+import { updateTimesToFB } from '../../helper/firebase/writeTimes';
 
 export async function getServerSideProps(context: any) {
   const { user } = context.query;
 
-  const timesRef = await collection(db, 'users', user, 'times');
-  const currentTimes = await getDocs(timesRef)
-    .then((snapshot) => {
-      const array: any = [];
-      snapshot.docs.forEach((doc) => {
-        array.push({ ...doc.data(), id: doc.id });
-      });
-      return array;
-    })
-    .catch((err) => console.log(err));
+  const currentTimes = await getTimes({ userId: user });
 
   currentTimes.sort((a: any, b: any) =>
     a.date > b.date ? 1 : b.date > a.date ? -1 : 0

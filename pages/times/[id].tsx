@@ -1,4 +1,3 @@
-import { collection, getDocs, query, where } from 'firebase/firestore';
 import { InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
@@ -9,25 +8,15 @@ import Modal from '../../components/modal';
 import { Text } from '../../components/text';
 import TimeInput from '../../components/TimeInput';
 import { Times } from '../../components/TimesCard';
-import { db } from '../../firebase';
 import { AuthContext } from '../../firebase/context';
 import getTimeBetween from '../../helper/getTimeBetween';
-import { updateTimesToFB } from '../../helper/writeToFB';
+import { updateTimesToFB } from '../../helper/firebase/writeTimes';
+import { getTimesById } from '../../helper/firebase/getTimes';
 
 export async function getServerSideProps(context: any) {
   const { user, id } = context.query;
 
-  const timesRef = collection(db, 'users', user, 'times');
-  const q = query(timesRef, where('__name__', '==', id));
-  const currentTimes = await getDocs(q)
-    .then((snapshot) => {
-      const array: any = [];
-      snapshot.docs.forEach((doc) => {
-        array.push({ ...doc.data(), id: doc.id });
-      });
-      return array;
-    })
-    .catch((err) => console.log(err));
+  const currentTimes = await getTimesById({ userId: user, id: id });
 
   return {
     props: {

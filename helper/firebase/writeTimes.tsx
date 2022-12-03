@@ -1,5 +1,5 @@
 import { collection, doc, setDoc, updateDoc } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db } from '../../firebase';
 
 type AddTimeProps = {
   userId: string;

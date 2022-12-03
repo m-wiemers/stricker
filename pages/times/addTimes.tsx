@@ -8,7 +8,7 @@ import TimeInput from '../../components/TimeInput';
 import { AuthContext } from '../../firebase/context';
 import { DateToString } from '../../helper/dateToString';
 import getTimeBetween from '../../helper/getTimeBetween';
-import { addTimesToFB } from '../../helper/writeToFB';
+import { addTimesToFB } from '../../helper/firebase/writeTimes';
 
 const Wrapper = styled.div`
   display: grid;
