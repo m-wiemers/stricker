@@ -6,8 +6,7 @@ import ConcertOverviewCard from '../../../components/ConcertOverviewCard';
 import Modal from '../../../components/modal';
 import { CustomLink, Text } from '../../../components/text';
 import { db } from '../../../firebase';
-import { getConcerts } from '../../../helper/firebase/getConcert';
-import { ConcertProps } from '../../concerts';
+import { ConcertProps, getConcerts } from '../../../helper/firebase/getConcert';
 
 export async function getServerSideProps() {
   const concertList = await getConcerts();

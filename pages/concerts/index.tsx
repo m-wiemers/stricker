@@ -1,9 +1,7 @@
-import { collection, getDocs } from 'firebase/firestore';
 import styled from 'styled-components';
 import ConcertOverviewCard from '../../components/ConcertOverviewCard';
 import { Text } from '../../components/text';
-import { db } from '../../firebase';
-import { getConcerts } from '../../helper/firebase/getConcert';
+import { ConcertProps, getConcerts } from '../../helper/firebase/getConcert';
 
 export async function getServerSideProps() {
   const concertList = await getConcerts();
@@ -18,20 +16,6 @@ export async function getServerSideProps() {
     },
   };
 }
-
-export type ConcertProps = {
-  id: string;
-  date: string;
-  concertName: string;
-  bands: BandProps[];
-};
-
-type BandProps = {
-  bandName: string;
-  startTime: string;
-  endTime: string;
-  pause?: number;
-};
 
 const Wrapper = styled.div`
   display: grid;

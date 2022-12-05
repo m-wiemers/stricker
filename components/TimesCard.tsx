@@ -1,5 +1,6 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { TimeProps } from '../helper/firebase/getTimes';
 import { formatDate } from '../helper/formatter';
 import DeleteIcon from './icons/deleteIcon';
 import EditIcon from './icons/editIcon';
@@ -11,16 +12,6 @@ type Props = {
   onEdit: (id: string) => void;
   onCheckSubmitted: (index: ChangeEvent) => void;
   onCheckPaid: (index: ChangeEvent) => void;
-};
-
-export type Times = {
-  id: string;
-  date: string;
-  startTime: `${string}:${string}`;
-  endTime: `${string}:${string}`;
-  duration: string;
-  submitted: boolean;
-  paid: boolean;
 };
 
 type IconProps = {
@@ -60,7 +51,7 @@ const TimesCard = ({
   onEdit,
   onCheckPaid,
   onCheckSubmitted,
-}: Times & Props): JSX.Element => {
+}: TimeProps & Props): JSX.Element => {
   return (
     <Wrapper>
       <IconWrapper title="Löschen" onClick={() => onDelete(id)}>

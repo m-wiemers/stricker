@@ -7,9 +7,8 @@ import { Stations } from '../../../helper/stations';
 import { Text } from '../../../components/text';
 import { WorkTimes } from '../../../components/worktimes';
 import { formatDate } from '../../../helper/formatter';
-import { ConcertProps } from '../../concerts';
 import { getWorkers, Worker } from '../../../helper/firebase/getWorkers';
-import { getConcerts } from '../../../helper/firebase/getConcert';
+import { ConcertProps, getConcerts } from '../../../helper/firebase/getConcert';
 import { PersonalForPlan } from '../../../helper/firebase/getPlan';
 import { addPersonalPlanToFB } from '../../../helper/firebase/writePersonalPlan';
 

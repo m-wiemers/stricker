@@ -1,24 +1,20 @@
-import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
+import { deleteDoc, doc } from 'firebase/firestore';
 import { InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { useContext, useState } from 'react';
 import styled from 'styled-components';
 import Modal from '../../components/modal';
 import { CustomLink } from '../../components/text';
-import TimesCard, { Times } from '../../components/TimesCard';
+import TimesCard from '../../components/TimesCard';
 import { db } from '../../firebase';
 import { AuthContext } from '../../firebase/context';
-import { getTimes } from '../../helper/firebase/getTimes';
+import { getTimes, TimeProps } from '../../helper/firebase/getTimes';
 import { updateTimesToFB } from '../../helper/firebase/writeTimes';
 
 export async function getServerSideProps(context: any) {
   const { user } = context.query;
 
   const currentTimes = await getTimes({ userId: user });
-
-  currentTimes.sort((a: any, b: any) =>
-    a.date > b.date ? 1 : b.date > a.date ? -1 : 0
-  );
 
   return {
     props: {
@@ -43,7 +39,7 @@ const TimesOverviewPage = ({
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element => {
   const router = useRouter();
   const { user } = useContext(AuthContext);
-  const [times, setTimes] = useState<Times[]>(currentTimes);
+  const [times, setTimes] = useState<TimeProps[]>(currentTimes);
   const [modal, setModal] = useState<boolean>(false);
   const [modalMessage, setModalMessage] = useState<string>('');
 
@@ -88,32 +84,15 @@ const TimesOverviewPage = ({
     });
   };
 
-  const handleModalClose = () => {
+  const handleModalClose = async () => {
     setModal(false);
-    const getTimes = async () => {
-      const timesRef = collection(db, 'users', user.uid, 'times');
-      const currentTimes = await getDocs(timesRef)
-        .then((snapshot) => {
-          const array: any = [];
-          snapshot.docs.forEach((doc) => {
-            array.push({ ...doc.data(), id: doc.id });
-          });
-          return array;
-        })
-        .catch((err) => console.log(err));
 
-      currentTimes.sort((a: any, b: any) =>
-        a.date > b.date ? 1 : b.date > a.date ? -1 : 0
-      );
+    const times = await getTimes({ userId: user.uid });
 
-      return currentTimes;
-    };
-
-    getTimes().then(setTimes);
-    return () => getTimes();
+    return setTimes(times);
   };
 
-  const mappedTimes = times.map((time: Times, index) => (
+  const mappedTimes = times.map((time: TimeProps, index) => (
     <TimesCard
       key={time.id}
       id={time.id}

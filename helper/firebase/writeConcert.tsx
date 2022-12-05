@@ -5,13 +5,13 @@ type Props = {
   date: string;
   concertName: string;
   bands: BandProps[];
-  handleThen: () => void;
+  handleThen?: () => void;
 };
 
-type BandProps = {
+export type BandProps = {
   bandName: string;
-  startTime?: string;
-  endTime?: string;
+  startTime: string;
+  endTime: string;
   pause?: number;
 };
 

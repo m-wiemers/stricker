@@ -1,12 +1,15 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import styled from 'styled-components';
-import AddBandForm, { BandProps } from '../../../components/addBandForms';
+import AddBandForm from '../../../components/addBandForms';
 import Button from '../../../components/Button';
 import Input from '../../../components/Input';
 import Modal from '../../../components/modal';
 import { Text } from '../../../components/text';
-import { addConcertToFB } from '../../../helper/firebase/writeConcert';
+import {
+  addConcertToFB,
+  BandProps,
+} from '../../../helper/firebase/writeConcert';
 
 const Wrapper = styled.div`
   display: grid;

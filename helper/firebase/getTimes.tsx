@@ -5,7 +5,7 @@ type Props = {
   userId: string;
 };
 
-type TimeProps = {
+export type TimeProps = {
   id: string;
   date: string;
   startTime: `${string}:${string}`;
@@ -27,6 +27,11 @@ const getTimes = async ({ userId }: Props): Promise<TimeProps[]> => {
       return array;
     })
     .catch((err) => console.log(err));
+
+  currentTimes.sort((a: any, b: any) =>
+    a.date > b.date ? 1 : b.date > a.date ? -1 : 0
+  );
+
   return currentTimes;
 };
 

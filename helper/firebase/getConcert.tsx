@@ -6,19 +6,13 @@ import {
   getDocs,
 } from 'firebase/firestore';
 import { db } from '../../firebase';
+import { BandProps } from './writeConcert';
 
-type ConcertProps = {
+export type ConcertProps = {
   id: string;
   date: string;
   concertName: string;
   bands: BandProps[];
-};
-
-type BandProps = {
-  bandName: string;
-  startTime: string;
-  endTime: string;
-  pause?: number;
 };
 
 const getConcerts = async (): Promise<ConcertProps[]> => {

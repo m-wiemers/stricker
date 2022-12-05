@@ -7,9 +7,11 @@ import Button from '../../../components/Button';
 import Input from '../../../components/Input';
 import Modal from '../../../components/modal';
 import { Text } from '../../../components/text';
-import { getConcertById } from '../../../helper/firebase/getConcert';
+import {
+  ConcertProps,
+  getConcertById,
+} from '../../../helper/firebase/getConcert';
 import { updateConcertToFB } from '../../../helper/firebase/writeConcert';
-import { ConcertProps } from '../../concerts';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const getId = (): string => {

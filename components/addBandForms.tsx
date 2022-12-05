@@ -1,14 +1,8 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import { BandProps } from '../helper/firebase/writeConcert';
 import Button from './Button';
 import Input from './Input';
-
-export type BandProps = {
-  bandName: string;
-  startTime?: string;
-  endTime?: string;
-  pause?: number;
-};
 
 type BandVoids = {
   onChangeBandName: (e: any) => void;
