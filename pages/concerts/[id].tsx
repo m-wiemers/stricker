@@ -1,9 +1,7 @@
-import { doc, getDoc } from 'firebase/firestore';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import styled from 'styled-components';
-import { ConcertProps } from '.';
 import { Text } from '../../components/text';
-import { db } from '../../firebase';
+import { ConcertProps, getConcertById } from '../../helper/firebase/getConcert';
 import { formatDate } from '../../helper/formatter';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -16,14 +14,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   };
 
-  const concertRef = await doc(db, 'concerts', getId());
-  const concertDetails = await getDoc(concertRef)
-    .then((concert) => {
-      const data = concert.data();
-
-      return data;
-    })
-    .catch((err) => console.error(err.message));
+  const concertDetails = await getConcertById({ id: getId() });
 
   return {
     props: {

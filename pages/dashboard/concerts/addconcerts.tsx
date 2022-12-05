@@ -1,13 +1,15 @@
-import { addDoc, collection } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import styled from 'styled-components';
-import AddBandForm, { BandProps } from '../../../components/addBandForms';
+import AddBandForm from '../../../components/addBandForms';
 import Button from '../../../components/Button';
 import Input from '../../../components/Input';
 import Modal from '../../../components/modal';
 import { Text } from '../../../components/text';
-import { db } from '../../../firebase';
+import {
+  addConcertToFB,
+  BandProps,
+} from '../../../helper/firebase/writeConcert';
 
 const Wrapper = styled.div`
   display: grid;
@@ -85,13 +87,15 @@ const Concerts = (): JSX.Element => {
       return;
     }
 
-    const workRef = collection(db, 'concerts');
-    addDoc(workRef, { date: date, concertName: concertName, bands: bands })
-      .then(() => {
+    addConcertToFB({
+      date,
+      concertName,
+      bands,
+      handleThen: () => {
         setModalMessage('Konzert wurde gespeichert!');
         setModal(true);
-      })
-      .catch((err) => console.error(err.message));
+      },
+    });
   };
 
   return (

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import ActionButton from './ActionButton';
 import Dropdown from './dropdown';
 import Input from './Input';
-import { Stations } from './stations';
+import { Stations } from '../helper/stations';
 
 type Props = {
   name: string;
@@ -21,7 +21,7 @@ const Wrapper = styled.div`
   margin-bottom: 1rem;
 `;
 
-const Worker = ({
+const WorkerInput = ({
   name,
   station,
   onStationChange,
@@ -42,4 +42,4 @@ const Worker = ({
   );
 };
 
-export default Worker;
+export default WorkerInput;

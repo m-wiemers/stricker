@@ -1,4 +1,4 @@
-import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
+import { deleteDoc, doc } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import styled from 'styled-components';
@@ -6,19 +6,10 @@ import ConcertOverviewCard from '../../../components/ConcertOverviewCard';
 import Modal from '../../../components/modal';
 import { CustomLink, Text } from '../../../components/text';
 import { db } from '../../../firebase';
-import { ConcertProps } from '../../concerts';
+import { ConcertProps, getConcerts } from '../../../helper/firebase/getConcert';
 
 export async function getServerSideProps() {
-  const concertRef = await collection(db, 'concerts');
-  const concertList = await getDocs(concertRef)
-    .then((snapshot) => {
-      const array: any = [];
-      snapshot.docs.forEach((doc) => {
-        array.push({ ...doc.data(), id: doc.id });
-      });
-      return array;
-    })
-    .catch((err) => console.log(err));
+  const concertList = await getConcerts();
 
   return {
     props: {

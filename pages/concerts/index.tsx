@@ -1,20 +1,10 @@
-import { collection, getDocs } from 'firebase/firestore';
 import styled from 'styled-components';
 import ConcertOverviewCard from '../../components/ConcertOverviewCard';
 import { Text } from '../../components/text';
-import { db } from '../../firebase';
+import { ConcertProps, getConcerts } from '../../helper/firebase/getConcert';
 
 export async function getServerSideProps() {
-  const concertRef = await collection(db, 'concerts');
-  const concertList = await getDocs(concertRef)
-    .then((snapshot) => {
-      const array: any = [];
-      snapshot.docs.forEach((doc) => {
-        array.push({ ...doc.data(), id: doc.id });
-      });
-      return array;
-    })
-    .catch((err) => console.log(err));
+  const concertList = await getConcerts();
 
   concertList.sort((a: any, b: any) =>
     a.date > b.date ? 1 : b.date > a.date ? -1 : 0
@@ -26,20 +16,6 @@ export async function getServerSideProps() {
     },
   };
 }
-
-export type ConcertProps = {
-  id: string;
-  date: string;
-  concertName: string;
-  bands: BandProps[];
-};
-
-type BandProps = {
-  bandName: string;
-  startTime: string;
-  endTime: string;
-  pause?: number;
-};
 
 const Wrapper = styled.div`
   display: grid;

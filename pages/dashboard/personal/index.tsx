@@ -1,22 +1,11 @@
 import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import PersonalOverviewCard from '../../../components/PersonalOverviewCard';
 import { CustomLink, Text } from '../../../components/text';
 import { db } from '../../../firebase';
-
-type PlanProps = {
-  concert: string;
-  id: string;
-  personal: {
-    name: string;
-    station: string;
-    startTime: string;
-    endTime: string;
-  }[];
-};
+import { PersonalPlanProps } from '../../../helper/firebase/getPlan';
 
 const Wrapper = styled.div`
   display: grid;
@@ -59,7 +48,7 @@ const PersonalPlan = ({
     });
   };
 
-  const planList = plans.map((plan: PlanProps, index: number) => (
+  const planList = plans.map((plan: PersonalPlanProps, index: number) => (
     <PersonalOverviewCard
       key={index}
       concert={plan.concert}

@@ -1,21 +1,16 @@
-import { addDoc, collection, getDocs } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Button from '../../../components/Button';
 import Dropdown from '../../../components/dropdown';
 import Modal from '../../../components/modal';
-import { Stations } from '../../../components/stations';
+import { Stations } from '../../../helper/stations';
 import { Text } from '../../../components/text';
 import { WorkTimes } from '../../../components/worktimes';
-import { db } from '../../../firebase';
 import { formatDate } from '../../../helper/formatter';
-import { ConcertProps } from '../../concerts';
-
-type Worker = {
-  id: string;
-  name: string;
-  station: string;
-};
+import { getWorkers, Worker } from '../../../helper/firebase/getWorkers';
+import { ConcertProps, getConcerts } from '../../../helper/firebase/getConcert';
+import { PersonalForPlan } from '../../../helper/firebase/getPlan';
+import { addPersonalPlanToFB } from '../../../helper/firebase/writePersonalPlan';
 
 const Wrapper = styled.div`
   display: grid;
@@ -38,60 +33,22 @@ const Station = styled.p`
   align-self: end;
 `;
 
-export type PersonPlan = {
-  name: string;
-  station: string;
-  startTime: string;
-  endTime: string;
-};
-
 export async function getServerSideProps() {
-  const workRef = await collection(db, 'workers');
-  const workers = await getDocs(workRef)
-    .then((snapshot) => {
-      const array: any = [];
-      snapshot.docs.forEach((doc) => {
-        array.push({ ...doc.data(), id: doc.id });
-      });
-      array.unshift({ name: 'Keine Angabe' });
-      return array;
-    })
-    .catch((err) => console.log(err));
+  const workers = await getWorkers({ unshift: true });
 
-  const concertRef = await collection(db, 'concerts');
-  const concertList = await getDocs(concertRef)
-    .then((snapshot) => {
-      const array: any = [];
-      snapshot.docs.forEach((doc) => {
-        array.push({ ...doc.data(), id: doc.id });
-      });
-      return array;
-    })
-    .catch((err) => console.log(err));
-
-  const personalPlanRef = await collection(db, 'personalPlan');
-  const planIds = await getDocs(personalPlanRef)
-    .then((snapshot) => {
-      const array: any = [];
-      snapshot.docs.forEach((doc) => {
-        array.push({ ...doc.data(), id: doc.id });
-      });
-      return array;
-    })
-    .catch((err) => console.log(err));
+  const concertList = await getConcerts();
 
   return {
     props: {
       workers,
       concertList,
-      planIds,
     },
   };
 }
 
-const PersonalPlan = ({ workers, concertList, planIds }: any): JSX.Element => {
+const PersonalPlan = ({ workers, concertList }: any): JSX.Element => {
   const [selectedConcert, setSelectedConcert] = useState<string>('');
-  const [personal, setPersonal] = useState<PersonPlan[]>([]);
+  const [personal, setPersonal] = useState<PersonalForPlan[]>([]);
   const concerts: ConcertProps[] = concertList;
   const personalList: Worker[] = workers;
   const [modal, setModal] = useState(false);
@@ -102,7 +59,7 @@ const PersonalPlan = ({ workers, concertList, planIds }: any): JSX.Element => {
 
   useEffect(() => {
     setSelectedConcert(concertDateList[0]);
-    const newList: PersonPlan[] = [];
+    const newList: PersonalForPlan[] = [];
     Stations.forEach((station) => {
       const name = personalList.find(
         (person) => person.station === station
@@ -219,10 +176,12 @@ const PersonalPlan = ({ workers, concertList, planIds }: any): JSX.Element => {
         person.endTime = 'Ende';
       }
     });
-    const workRef = collection(db, 'personalPlan');
-    addDoc(workRef, { concert: selectedConcert, personal: clone })
-      .then(() => setModal(true))
-      .catch((err) => console.error(err.message));
+
+    addPersonalPlanToFB({
+      concert: selectedConcert,
+      personal: clone,
+      handleThen: () => setModal(true),
+    });
   };
 
   return (

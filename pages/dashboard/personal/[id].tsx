@@ -1,10 +1,3 @@
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  updateDoc,
-} from 'firebase/firestore';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -12,27 +5,15 @@ import styled from 'styled-components';
 import Button from '../../../components/Button';
 import Dropdown from '../../../components/dropdown';
 import Modal from '../../../components/modal';
-import { Stations } from '../../../components/stations';
+import { Stations } from '../../../helper/stations';
 import { Text } from '../../../components/text';
 import { WorkTimes } from '../../../components/worktimes';
-import { db } from '../../../firebase';
-import { PersonPlan } from './addPlan';
-
-type Props = {
-  concert: string;
-  personal: {
-    name: string;
-    station: string;
-    startTime: string;
-    endTime: string;
-  }[];
-};
-
-type Worker = {
-  id: string;
-  name: string;
-  station: string;
-};
+import { getWorkers, Worker } from '../../../helper/firebase/getWorkers';
+import {
+  getPlanById,
+  PersonalPlanProps,
+} from '../../../helper/firebase/getPlan';
+import { updatePersonalPlanToFB } from '../../../helper/firebase/writePersonalPlan';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const getId = (): string => {
@@ -44,24 +25,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   };
 
-  const personalPlanRef = await doc(db, 'personalPlan', getId());
-  const data = await getDoc(personalPlanRef)
-    .then((plan) => {
-      return plan.data();
-    })
-    .catch((err) => console.error(err.message));
+  const data = await getPlanById({ id: getId() });
 
-  const workRef = await collection(db, 'workers');
-  const workers = await getDocs(workRef)
-    .then((snapshot) => {
-      const array: any = [];
-      snapshot.docs.forEach((doc) => {
-        array.push({ ...doc.data(), id: doc.id });
-      });
-      array.unshift({ name: 'Keine Angabe' });
-      return array;
-    })
-    .catch((err) => console.log(err));
+  const workers = await getWorkers({ unshift: true });
 
   return {
     props: {
@@ -98,10 +64,12 @@ const PersonalPlanEdit = ({
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element => {
   const router = useRouter();
   const personalList: Worker[] = workers;
-  const [concert, setConcert] = useState<Props>(data);
-  const [personal, setPersonal] = useState<PersonPlan[]>(concert.personal);
+  const [concert, setConcert] = useState<PersonalPlanProps>(data);
+  const [personal, setPersonal] = useState(concert.personal);
   const thisId = router.asPath.split('/').pop();
   const [modal, setModal] = useState<boolean>(false);
+
+  console.log(concert);
 
   const handleChangeWorker = (
     value: string,
@@ -132,14 +100,12 @@ const PersonalPlanEdit = ({
 
   const handleUpdate = () => {
     setConcert({ ...concert, personal: personal });
-    console.log(concert);
     if (thisId) {
-      const planRef = doc(db, 'personalPlan', thisId);
-      updateDoc(planRef, concert)
-        .then(() => {
-          setModal(true);
-        })
-        .catch((err) => console.error(err.message));
+      updatePersonalPlanToFB({
+        id: thisId,
+        newConcert: concert,
+        handleThen: () => setModal(true),
+      });
     }
   };
 
@@ -167,7 +133,8 @@ const PersonalPlanEdit = ({
             label="von"
             list={WorkTimes}
             selected={
-              personal.find((per) => per.station === station)?.startTime || ''
+              personal.find((per) => per.station === station)?.startTime ||
+              '13:00'
             }
             onSelect={(e) =>
               handleChangeWorker(e.target.value, station, 'startTime')
@@ -177,7 +144,8 @@ const PersonalPlanEdit = ({
             label="von"
             list={WorkTimes}
             selected={
-              personal.find((per) => per.station === station)?.endTime || ''
+              personal.find((per) => per.station === station)?.endTime ||
+              '18:00'
             }
             onSelect={(e) =>
               handleChangeWorker(e.target.value, station, 'endTime')

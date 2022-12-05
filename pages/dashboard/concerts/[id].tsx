@@ -1,4 +1,3 @@
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -8,8 +7,11 @@ import Button from '../../../components/Button';
 import Input from '../../../components/Input';
 import Modal from '../../../components/modal';
 import { Text } from '../../../components/text';
-import { db } from '../../../firebase';
-import { ConcertProps } from '../../concerts';
+import {
+  ConcertProps,
+  getConcertById,
+} from '../../../helper/firebase/getConcert';
+import { updateConcertToFB } from '../../../helper/firebase/writeConcert';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const getId = (): string => {
@@ -21,12 +23,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   };
 
-  const concertRef = await doc(db, 'concerts', getId());
-  const data = await getDoc(concertRef)
-    .then((concert) => {
-      return concert.data();
-    })
-    .catch((err) => console.error(err.message));
+  const data = await getConcertById({ id: getId() });
 
   return {
     props: {
@@ -119,14 +116,14 @@ const ConcertDetailPage = ({
   };
 
   const handleUpdateFirebase = () => {
-    const newConcert = concert;
     if (thisId) {
-      const concertRef = doc(db, 'concerts', thisId);
-      updateDoc(concertRef, newConcert)
-        .then(() => {
-          setModal(true);
-        })
-        .catch((err) => console.error(err.message));
+      updateConcertToFB({
+        id: thisId,
+        date: concert.date,
+        concertName: concert.concertName,
+        bands: concert.bands,
+        handleThen: () => setModal(true),
+      });
     }
   };
 

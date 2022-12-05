@@ -1,9 +1,7 @@
-import { doc, getDoc } from 'firebase/firestore';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import styled from 'styled-components';
-import { PersonalPlanProps } from '.';
 import { Text } from '../../components/text';
-import { db } from '../../firebase';
+import { getPlanById, PersonalPlanProps } from '../../helper/firebase/getPlan';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const getId = (): string => {
@@ -15,12 +13,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   };
 
-  const personalRef = await doc(db, 'personalPlan', getId());
-  const data = await getDoc(personalRef)
-    .then((concert) => {
-      return concert.data();
-    })
-    .catch((err) => console.error(err.message));
+  const data = await getPlanById({ id: getId() });
 
   return {
     props: {
