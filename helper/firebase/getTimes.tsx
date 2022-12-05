@@ -48,24 +48,6 @@ type TimesByIdProps = {
   id: string;
 };
 
-// const getTimesById = async ({
-//   userId,
-//   id,
-// }: TimesByIdProps): Promise<TimeProps[]> => {
-//   const timesRef = collection(db, 'users', userId, 'times');
-//   const q = query(timesRef, where('__name__', '==', id));
-//   const currentTimes = await getDocs(q)
-//     .then((snapshot) => {
-//       const array: any = [];
-//       snapshot.docs.forEach((doc) => {
-//         array.push({ ...doc.data(), id: doc.id });
-//       });
-//       return array;
-//     })
-//     .catch((err) => console.log(err));
-//   return currentTimes;
-// };
-
 const getTimesById = async ({
   userId,
   id,
