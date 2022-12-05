@@ -1,4 +1,12 @@
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  DocumentData,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from 'firebase/firestore';
 import { db } from '../../firebase';
 
 type Props = {
@@ -40,22 +48,37 @@ type TimesByIdProps = {
   id: string;
 };
 
+// const getTimesById = async ({
+//   userId,
+//   id,
+// }: TimesByIdProps): Promise<TimeProps[]> => {
+//   const timesRef = collection(db, 'users', userId, 'times');
+//   const q = query(timesRef, where('__name__', '==', id));
+//   const currentTimes = await getDocs(q)
+//     .then((snapshot) => {
+//       const array: any = [];
+//       snapshot.docs.forEach((doc) => {
+//         array.push({ ...doc.data(), id: doc.id });
+//       });
+//       return array;
+//     })
+//     .catch((err) => console.log(err));
+//   return currentTimes;
+// };
+
 const getTimesById = async ({
   userId,
   id,
-}: TimesByIdProps): Promise<TimeProps[]> => {
-  const timesRef = collection(db, 'users', userId, 'times');
-  const q = query(timesRef, where('__name__', '==', id));
-  const currentTimes = await getDocs(q)
+}: TimesByIdProps): Promise<
+  (TimeProps & string) | undefined | void | DocumentData
+> => {
+  const timesRef = doc(db, 'users', userId, 'times', id);
+  const times = await getDoc(timesRef)
     .then((snapshot) => {
-      const array: any = [];
-      snapshot.docs.forEach((doc) => {
-        array.push({ ...doc.data(), id: doc.id });
-      });
-      return array;
+      return snapshot.data();
     })
     .catch((err) => console.log(err));
-  return currentTimes;
+  return { times, id };
 };
 
 export { getTimes, getTimesById };

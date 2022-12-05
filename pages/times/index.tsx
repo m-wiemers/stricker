@@ -102,7 +102,7 @@ const TimesOverviewPage = ({
       duration={time.duration}
       submitted={time.submitted}
       paid={time.paid}
-      onEdit={(id) => router.push(`times/${id}?id=${id}&user=${user.uid}`)}
+      onEdit={(id) => router.push(`times/addTimes?id=${id}&user=${user.uid}`)}
       onDelete={(id) => handleDelete(id)}
       onCheckPaid={() => handleChange(index, 'paid')}
       onCheckSubmitted={() => handleChange(index, 'submit')}

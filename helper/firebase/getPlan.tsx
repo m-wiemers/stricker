@@ -44,7 +44,7 @@ const getPlanById = async ({
 }: GetPlanByIdProps): Promise<
   PersonalPlanProps | undefined | void | DocumentData
 > => {
-  const personalPlanRef = await doc(db, 'personalPlan', id);
+  const personalPlanRef = doc(db, 'personalPlan', id);
   const data = await getDoc(personalPlanRef)
     .then((plan) => {
       return plan.data();
