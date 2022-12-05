@@ -1,4 +1,3 @@
-import { addDoc, collection } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import styled from 'styled-components';
@@ -7,7 +6,6 @@ import Button from '../../../components/Button';
 import Input from '../../../components/Input';
 import Modal from '../../../components/modal';
 import { Text } from '../../../components/text';
-import { db } from '../../../firebase';
 import { addConcertToFB } from '../../../helper/firebase/writeConcert';
 
 const Wrapper = styled.div`

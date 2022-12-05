@@ -1,42 +1,23 @@
-import {
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  updateDoc,
-} from 'firebase/firestore';
+import { deleteDoc, doc } from 'firebase/firestore';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { useState } from 'react';
 import styled from 'styled-components';
 import AddWorkerModal from '../../components/AddWorkerModal';
 import Button from '../../components/Button';
 import Modal from '../../components/modal';
-import Worker from '../../components/Worker';
+import WorkerInput from '../../components/WorkerInput';
 import { db } from '../../firebase';
+import { getWorkers, Worker } from '../../helper/firebase/getWorkers';
+import { updateWorkerToFB } from '../../helper/firebase/writeWorkers';
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const workRef = await collection(db, 'workers');
-  const initialWorkers = await getDocs(workRef)
-    .then((snapshot) => {
-      const array: any = [];
-      snapshot.docs.forEach((doc) => {
-        array.push({ ...doc.data(), id: doc.id });
-      });
-      return array;
-    })
-    .catch((err) => console.log(err));
+  const initialWorkers = await getWorkers({});
 
   return {
     props: {
       initialWorkers,
     },
   };
-};
-
-type Worker = {
-  id: string;
-  name: string;
-  station: string;
 };
 
 const Wrapper = styled.div`
@@ -46,7 +27,7 @@ const Wrapper = styled.div`
 
 const Personal = ({
   initialWorkers,
-}: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element => {
+}: InferGetServerSidePropsType<Worker[]>): JSX.Element => {
   const [workers, setWorkers] = useState<Worker[]>(initialWorkers);
   const [addModal, setAddModal] = useState<boolean>(false);
   const [modal, setModal] = useState<boolean>(false);
@@ -72,22 +53,18 @@ const Personal = ({
   };
 
   const handleUpdateFirebase = () => {
-    newWorkers.forEach((worker) => {
-      const newWorker = workers.find((el) => el.id == worker.id);
-      if (newWorker) {
-        const workersRef = doc(db, 'workers', newWorker.id);
-        updateDoc(workersRef, { station: newWorker.station })
-          .then(() => {
-            setModalMessage('Updates gespeichert');
-            setModal(true);
-          })
-          .catch((err) => console.error(err.message));
-      }
+    updateWorkerToFB({
+      newWorkers,
+      initialWorkers: workers,
+      handleThen: () => {
+        setModalMessage('Updates gespeichert');
+        setModal(true);
+      },
     });
   };
 
   const mappedWorkers = workers.map((el, index) => (
-    <Worker
+    <WorkerInput
       key={el.id}
       id={el.id}
       name={el.name}

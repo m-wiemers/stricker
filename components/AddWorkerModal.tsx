@@ -3,10 +3,9 @@ import styled from 'styled-components';
 import Input from './Input';
 import Modal from './modal';
 import Dropdown from './dropdown';
-import { Stations } from './stations';
-import { addDoc, collection } from 'firebase/firestore';
-import { db } from '../firebase';
+import { Stations } from '../helper/stations';
 import { Text } from './text';
+import { addWorkerToFB } from '../helper/firebase/writeWorkers';
 
 type Props = {
   open: boolean;
@@ -33,15 +32,18 @@ const AddWorkerModal = ({ open, onCloseModal }: Props): JSX.Element => {
   const [station, setStation] = useState<string>('');
   const [message, setMessage] = useState<string>('');
 
+  const handleWriteMessage = () => {
+    setMessage(`Prima! ${newWorker} wurde hinzugefügt!`),
+      setNewWorker(''),
+      setStation('Kein Einsatzort');
+  };
+
   const addNewWorker = () => {
-    const workRef = collection(db, 'workers');
-    addDoc(workRef, { name: newWorker, station: station })
-      .then(() => setMessage(`Prima! ${newWorker} wurde hinzugefügt!`))
-      .then(() => {
-        setNewWorker('');
-        setStation('Kein Einsatzort');
-      })
-      .catch((err) => console.error(err.message));
+    addWorkerToFB({
+      name: newWorker,
+      station: station,
+      handleThen: handleWriteMessage,
+    });
   };
 
   return (

@@ -1,20 +1,10 @@
-import { collection, getDocs } from 'firebase/firestore';
 import styled from 'styled-components';
 import PersonalOverviewCard from '../../components/PersonalOverviewCard';
 import { Text } from '../../components/text';
-import { db } from '../../firebase';
+import { getPlans, PersonalPlanProps } from '../../helper/firebase/getPlan';
 
 export async function getServerSideProps() {
-  const personalRef = await collection(db, 'personalPlan');
-  const personal = await getDocs(personalRef)
-    .then((snapshot) => {
-      const array: any = [];
-      snapshot.docs.forEach((doc) => {
-        array.push({ ...doc.data(), id: doc.id });
-      });
-      return array;
-    })
-    .catch((err) => console.log(err));
+  const personal = await getPlans();
 
   personal.sort((a: any, b: any) => (a > b ? 1 : b > a ? -1 : 0));
 
@@ -24,14 +14,6 @@ export async function getServerSideProps() {
     },
   };
 }
-
-export type PersonalPlanProps = {
-  concert: string;
-  id: string;
-  personal: [
-    { name: string; station: string; startTime: string; endTime: string }
-  ];
-};
 
 const Wrapper = styled.div`
   display: grid;
