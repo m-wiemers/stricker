@@ -3,6 +3,7 @@ import { InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { useContext, useState } from 'react';
 import styled from 'styled-components';
+import Dropdown from '../../components/dropdown';
 import Modal from '../../components/modal';
 import { CustomLink } from '../../components/text';
 import TimesCard from '../../components/TimesCard';
@@ -34,6 +35,13 @@ const InnerWrapper = styled.div`
   max-width: 370px;
 `;
 
+const HeadWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 const TimesOverviewPage = ({
   currentTimes,
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element => {
@@ -42,6 +50,7 @@ const TimesOverviewPage = ({
   const [times, setTimes] = useState<TimeProps[]>(currentTimes);
   const [modal, setModal] = useState<boolean>(false);
   const [modalMessage, setModalMessage] = useState<string>('');
+  const [filter, setFilter] = useState<string>('Alle');
 
   const handleDelete = (id: string) => {
     const timesRef = doc(db, 'users', user.uid, 'times', id);
@@ -92,22 +101,44 @@ const TimesOverviewPage = ({
     return setTimes(times);
   };
 
-  const mappedTimes = times.map((time: TimeProps, index) => (
-    <TimesCard
-      key={time.id}
-      id={time.id}
-      date={time.date}
-      startTime={time.startTime}
-      endTime={time.endTime}
-      duration={time.duration}
-      submitted={time.submitted}
-      paid={time.paid}
-      onEdit={(id) => router.push(`times/addTimes?id=${id}&user=${user.uid}`)}
-      onDelete={(id) => handleDelete(id)}
-      onCheckPaid={() => handleChange(index, 'paid')}
-      onCheckSubmitted={() => handleChange(index, 'submit')}
-    />
-  ));
+  const filters = ['Alle', 'Eingereicht', 'Ausgezahlt'];
+
+  const handleFilter = (value: string) => {
+    setFilter(value);
+    const clone = [...currentTimes];
+    switch (value) {
+      case 'Alle':
+        setTimes(currentTimes);
+        break;
+      case 'Ausgezahlt':
+        const paidTimes = clone.filter((ti) => ti.paid === true);
+        setTimes(paidTimes);
+        break;
+      case 'Eingereicht':
+        const submittedTimes = clone.filter((ti) => ti.submitted === true);
+        setTimes(submittedTimes);
+        break;
+    }
+  };
+
+  const mappedTimes = times.map((time: TimeProps, index) => {
+    return (
+      <TimesCard
+        key={time.id}
+        id={time.id}
+        date={time.date}
+        startTime={time.startTime}
+        endTime={time.endTime}
+        duration={time.duration}
+        submitted={time.submitted}
+        paid={time.paid}
+        onEdit={(id) => router.push(`times/addTimes?id=${id}&user=${user.uid}`)}
+        onDelete={(id) => handleDelete(id)}
+        onCheckPaid={() => handleChange(index, 'paid')}
+        onCheckSubmitted={() => handleChange(index, 'submit')}
+      />
+    );
+  });
 
   return (
     <Wrapper>
@@ -115,9 +146,17 @@ const TimesOverviewPage = ({
         {modalMessage}
       </Modal>
       <InnerWrapper>
-        <CustomLink variant="normal" href="/times/addTimes" color="blue">
-          Neue Zeiten eintragen
-        </CustomLink>
+        <HeadWrapper>
+          <CustomLink variant="normal" href="/times/addTimes" color="blue">
+            Neue Zeiten eintragen
+          </CustomLink>
+          <Dropdown
+            label="Filter"
+            list={filters}
+            selected={filter}
+            onSelect={(e) => handleFilter(e.target.value)}
+          />
+        </HeadWrapper>
         {mappedTimes}
       </InnerWrapper>
     </Wrapper>

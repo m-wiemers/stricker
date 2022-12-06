@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent } from 'react';
 import styled from 'styled-components';
 import { TimeProps } from '../helper/firebase/getTimes';
 import { formatDate } from '../helper/formatter';
