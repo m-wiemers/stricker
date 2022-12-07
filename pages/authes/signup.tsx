@@ -38,7 +38,7 @@ const SignUpPage = () => {
           'Prima! Das hat geklappt! Bitte bestätige deinen Zugang in der Email, die wir die gesendet haben'
         );
         updateProfile(cred.user, { displayName: userName });
-        setDoc(doc(db, 'users', cred.user.uid), {});
+        setDoc(doc(db, 'users', cred.user.uid), { userName });
         setModal(true);
       })
       .catch((err) => {
@@ -99,7 +99,7 @@ const SignUpPage = () => {
       <Button
         label="Anmelden"
         onClick={handleSignup}
-        disabled={pw !== secondPw || pw.length <= 6}
+        disabled={pw !== secondPw || pw.length <= 6 || userName == ''}
         style={{ width: '10rem' }}
       />
       <CustomLink variant="small" href="login">

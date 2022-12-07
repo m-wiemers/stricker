@@ -58,9 +58,9 @@ const AddTimePage = ({
   const day: TimeProps | null = currentTimes ? currentTimes.times : null;
   const id = currentTimes ? currentTimes.id : null;
   const router = useRouter();
-  const { user } = useContext(AuthContext);
+  const { user, userName } = useContext(AuthContext);
   const today = DateToString({ today: true });
-  const [name, setName] = useState<string>(user.displayName || '');
+  const [name, setName] = useState<string>(userName || '');
   const [date, setDate] = useState<string>(day ? day.date : today);
   const [startTime, setStartTime] = useState<`${string}:${string}`>(
     day ? day.startTime : '18:00'
