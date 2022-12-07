@@ -51,6 +51,12 @@ const TimesOverviewPage = ({
   const [modal, setModal] = useState<boolean>(false);
   const [modalMessage, setModalMessage] = useState<string>('');
   const [filter, setFilter] = useState<string>('Alle');
+  const filters = [
+    'Alle',
+    'Nicht eingereicht',
+    'Eingereicht / Nicht ausgezahlt',
+    'Ausgezahlt',
+  ];
 
   const handleDelete = (id: string) => {
     const timesRef = doc(db, 'users', user.uid, 'times', id);
@@ -101,8 +107,6 @@ const TimesOverviewPage = ({
     return setTimes(times);
   };
 
-  const filters = ['Alle', 'Eingereicht', 'Ausgezahlt'];
-
   const handleFilter = (value: string) => {
     setFilter(value);
     const clone = [...currentTimes];
@@ -110,13 +114,19 @@ const TimesOverviewPage = ({
       case 'Alle':
         setTimes(currentTimes);
         break;
+      case 'Nicht eingereicht':
+        const notSubmittedTimes = clone.filter((ti) => ti.submitted === false);
+        setTimes(notSubmittedTimes);
+        break;
+      case 'Eingereicht / Nicht ausgezahlt':
+        const notPaidTimes = clone.filter(
+          (ti) => ti.paid === false && ti.submitted === true
+        );
+        setTimes(notPaidTimes);
+        break;
       case 'Ausgezahlt':
         const paidTimes = clone.filter((ti) => ti.paid === true);
         setTimes(paidTimes);
-        break;
-      case 'Eingereicht':
-        const submittedTimes = clone.filter((ti) => ti.submitted === true);
-        setTimes(submittedTimes);
         break;
     }
   };
