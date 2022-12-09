@@ -90,6 +90,7 @@ const TimeInput = ({ handleChange, value, label }: Props): JSX.Element => {
         style={{ cursor: 'pointer', maxWidth: '6rem', textAlign: 'center' }}
         type="text"
         onFocus={() => setOpenSelect(true)}
+        onTouchStart={() => setOpenSelect(true)}
         value={value}
         id="input"
         label={label}
