@@ -25,7 +25,7 @@ const InnerWrapper = styled.div`
 `;
 
 const ProfilePage = (): JSX.Element => {
-  const { user, updateUserName } = useContext(AuthContext);
+  const { user, updateUserName, updateHourlyWage } = useContext(AuthContext);
   const router = useRouter();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [modal, setModal] = useState<boolean>(false);
@@ -60,7 +60,9 @@ const ProfilePage = (): JSX.Element => {
       userName: profile.userName,
       hourlyWage: profile.hourlyWage,
       handleThen: () => {
-        setModal(true), updateUserName(profile.userName);
+        setModal(true),
+          updateUserName(profile.userName),
+          updateHourlyWage(profile.hourlyWage);
       },
     });
   };

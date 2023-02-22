@@ -12,6 +12,7 @@ type Props = {
   onEdit: (id: string) => void;
   onCheckSubmitted: (index: ChangeEvent) => void;
   onCheckPaid: (index: ChangeEvent) => void;
+  hourlyWage: number;
 };
 
 type IconProps = {
@@ -47,11 +48,17 @@ const TimesCard = ({
   submitted,
   paid,
   id,
+  hourlyWage,
   onDelete,
   onEdit,
   onCheckPaid,
   onCheckSubmitted,
 }: TimeProps & Props): JSX.Element => {
+  const mal = (one: string, two: number) => {
+    const newOne = one.replace(',', '.');
+    return +newOne * two;
+  };
+
   return (
     <Wrapper>
       <IconWrapper title="Löschen" onClick={() => onDelete(id)}>
@@ -67,6 +74,9 @@ const TimesCard = ({
       <Text variant="normal">Bis: {endTime}</Text>
       <Text style={{ gridColumn: '1/3' }} variant="normal">
         Stunden: {duration}
+      </Text>
+      <Text style={{ gridColumn: '1/3' }} variant="normal">
+        Verdienst: {mal(duration, hourlyWage)}
       </Text>
       <Input
         type="checkbox"

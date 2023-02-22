@@ -7,15 +7,22 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [userName, setUserName] = useState('');
+  const [hourlyWage, setHourlyWage] = useState(null);
   const userId = auth.currentUser?.uid;
 
   const updateUserName = (value) => {
     setUserName(value);
   };
 
+  const updateHourlyWage = (value) => {
+    setHourlyWage(value);
+  };
+
   useEffect(() => {
     if (userId) {
-      getProfileById({ id: userId }).then((snap) => setUserName(snap.userName));
+      getProfileById({ id: userId }).then((snap) => {
+        setUserName(snap.userName), setHourlyWage(snap.hourlyWage);
+      });
     }
   }, [userId]);
 
@@ -24,7 +31,9 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, userName, updateUserName }}>
+    <AuthContext.Provider
+      value={{ user, userName, hourlyWage, updateUserName, updateHourlyWage }}
+    >
       {children}
     </AuthContext.Provider>
   );

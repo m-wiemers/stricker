@@ -1,11 +1,11 @@
 import { deleteDoc, doc } from 'firebase/firestore';
 import { InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Dropdown from '../../components/dropdown';
 import Modal from '../../components/modal';
-import { CustomLink } from '../../components/text';
+import { CustomLink, Text } from '../../components/text';
 import TimesCard from '../../components/TimesCard';
 import { db } from '../../firebase';
 import { AuthContext } from '../../firebase/context';
@@ -33,6 +33,7 @@ const Wrapper = styled.div`
 const InnerWrapper = styled.div`
   min-width: 370px;
   max-width: 370px;
+  display: grid;
 `;
 
 const HeadWrapper = styled.div`
@@ -46,8 +47,9 @@ const TimesOverviewPage = ({
   currentTimes,
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element => {
   const router = useRouter();
-  const { user } = useContext(AuthContext);
+  const { user, hourlyWage } = useContext(AuthContext);
   const [times, setTimes] = useState<TimeProps[]>(currentTimes);
+  const [totalEarn, setTotalEarn] = useState<number>();
   const [modal, setModal] = useState<boolean>(false);
   const [modalMessage, setModalMessage] = useState<string>('');
   const [filter, setFilter] = useState<string>('Alle');
@@ -57,6 +59,15 @@ const TimesOverviewPage = ({
     'Eingereicht / Nicht ausgezahlt',
     'Ausgezahlt',
   ];
+
+  useEffect(() => {
+    let totalHours = [0];
+    times.forEach((day) => totalHours.push(+day.duration.replace(',', '.')));
+
+    const totalTimes = totalHours.reduce((a, b) => a + b);
+
+    setTotalEarn(totalTimes * 12);
+  }, [times, filter]);
 
   const handleDelete = (id: string) => {
     const timesRef = doc(db, 'users', user.uid, 'times', id);
@@ -146,6 +157,7 @@ const TimesOverviewPage = ({
         onDelete={(id) => handleDelete(id)}
         onCheckPaid={() => handleChange(index, 'paid')}
         onCheckSubmitted={() => handleChange(index, 'submit')}
+        hourlyWage={hourlyWage}
       />
     );
   });
@@ -167,6 +179,9 @@ const TimesOverviewPage = ({
             onSelect={(e) => handleFilter(e.target.value)}
           />
         </HeadWrapper>
+        <Text variant="normal" style={{ justifySelf: 'center' }}>
+          Kompletter Verdienst: {totalEarn}
+        </Text>
         {mappedTimes}
       </InnerWrapper>
     </Wrapper>
