@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import ConcertOverviewCard from '../../components/ConcertOverviewCard';
+import LoadingScreen from '../../components/LoadingScreen';
 import { Text } from '../../components/text';
 import { ConcertProps, getConcerts } from '../../helper/firebase/getConcert';
 

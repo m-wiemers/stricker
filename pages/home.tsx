@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import styled from 'styled-components';
+import MetalHandIcon from '../components/icons/metalHand';
 import { CustomLink, Text } from '../components/text';
 import { AuthContext } from '../firebase/context';
 

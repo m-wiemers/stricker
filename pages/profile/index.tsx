@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
+import LoadingScreen from '../../components/LoadingScreen';
 import Modal from '../../components/modal';
 import { Text } from '../../components/text';
 import { AuthContext } from '../../firebase/context';
@@ -37,11 +38,7 @@ const ProfilePage = (): JSX.Element => {
   }, [user]);
 
   if (!profile) {
-    return (
-      <Wrapper>
-        <Text variant="headline">Loading...</Text>
-      </Wrapper>
-    );
+    return <LoadingScreen />;
   }
 
   const handleChange = (value: string, target: string) => {

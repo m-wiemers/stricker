@@ -3,50 +3,43 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import Menu from '../components/menu';
 import styled from 'styled-components';
-import { useRouter } from 'next/router';
+import { useRouter, Router } from 'next/router';
 import { auth } from '../firebase';
-import { Text } from '../components/text';
 import { useEffect, useState } from 'react';
 import { AuthProvider } from '../firebase/context';
 import Home from '.';
+import LoadingScreen from '../components/LoadingScreen';
 
 const Content = styled.div`
   margin: 2rem;
 `;
-
-function Loading(): JSX.Element {
-  const router = useRouter();
-
-  const [loading, setLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    const handleStart = (url: string) =>
-      url !== router.asPath && setLoading(true);
-    const handleComplete = (url: string) =>
-      url === router.asPath && setLoading(false);
-
-    router.events.on('routeChangeStart', handleStart);
-    router.events.on('routeChangeComplete', handleComplete);
-    router.events.on('routeChangeError', handleComplete);
-
-    return () => {
-      router.events.off('routeChangeStart', handleStart);
-      router.events.off('routeChangeComplete', handleComplete);
-      router.events.off('routeChangeError', handleComplete);
-    };
-  });
-
-  return <>{loading && <Text variant="normal">Einen Momment bitte...</Text>}</>;
-}
 
 const SUPERUSER = process.env.NEXT_PUBLIC_FIRST_SUPERUSER;
 const SECONDSUPERUSER = process.env.NEXT_PUBLIC_SECOND_SUPERUSER;
 const THIRDSUPERUSER = process.env.NEXT_PUBLIC_THIRD_SUPERUSER;
 
 function MyApp({ Component, pageProps }: AppProps & any) {
+  const router = useRouter();
   const [superUser, setSuperUser] = useState<boolean>(false);
-
+  const [loading, setLoading] = useState(false);
   const currentuser = auth.currentUser?.emailVerified;
+
+  useEffect(() => {
+    const start = () => {
+      setLoading(true);
+    };
+    const end = () => {
+      setLoading(false);
+    };
+    Router.events.on('routeChangeStart', start);
+    Router.events.on('routeChangeComplete', end);
+    Router.events.on('routeChangeError', end);
+    return () => {
+      Router.events.off('routeChangeStart', start);
+      Router.events.off('routeChangeComplete', end);
+      Router.events.off('routeChangeError', end);
+    };
+  }, []);
 
   useEffect(() => {
     if (currentuser) {
@@ -78,8 +71,6 @@ function MyApp({ Component, pageProps }: AppProps & any) {
     { linkName: 'Personalplanung', href: '/dashboard/personal' },
   ];
 
-  const router = useRouter();
-
   return (
     <>
       <Head>
@@ -108,13 +99,17 @@ function MyApp({ Component, pageProps }: AppProps & any) {
       )}
 
       <AuthProvider>
-        <Content>
-          {currentuser || superUser || router.pathname.includes('authes') ? (
-            <Component {...pageProps} />
-          ) : (
-            <Home />
-          )}
-        </Content>
+        {loading ? (
+          <LoadingScreen />
+        ) : (
+          <Content>
+            {currentuser || superUser || router.pathname.includes('authes') ? (
+              <Component {...pageProps} />
+            ) : (
+              <Home />
+            )}
+          </Content>
+        )}
       </AuthProvider>
     </>
   );
