@@ -66,8 +66,8 @@ const TimesOverviewPage = ({
 
     const totalTimes = totalHours.reduce((a, b) => a + b);
 
-    setTotalEarn(totalTimes * 12);
-  }, [times, filter]);
+    setTotalEarn(totalTimes * hourlyWage);
+  }, [times, filter, hourlyWage]);
 
   const handleDelete = (id: string) => {
     const timesRef = doc(db, 'users', user.uid, 'times', id);
